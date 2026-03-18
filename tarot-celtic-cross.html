@@ -1,0 +1,2433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Celtic Cross Tarot Reading</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a1a;
+    color: #d4c5a0;
+    font-family: 'Crimson Text', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Cinzel', serif; }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 15% 90%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 45% 45%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,0.3), transparent);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  header { text-align: center; padding: 30px 0 20px; }
+  header h1 {
+    font-size: 2.2em;
+    color: #c9a84c;
+    text-shadow: 0 0 20px rgba(201,168,76,0.3);
+    letter-spacing: 3px;
+  }
+  header p { font-style: italic; opacity: 0.7; margin-top: 8px; font-size: 1.1em; }
+
+  /* Sections - only one visible at a time */
+  .step { display: none; }
+  .step.visible { display: block; }
+
+  /* API Key */
+  .api-key-section { text-align: center; margin: 15px auto; max-width: 500px; }
+  .api-key-section label { display: block; margin-bottom: 6px; font-size: 0.9em; color: #8a7d65; }
+  .api-key-row { display: flex; gap: 8px; }
+  .api-key-row input {
+    flex: 1; padding: 10px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 6px; color: #d4c5a0;
+    font-family: monospace; font-size: 0.9em;
+  }
+  .api-key-row input:focus { outline: none; border-color: #c9a84c; box-shadow: 0 0 10px rgba(201,168,76,0.2); }
+  .api-key-row button, .small-btn {
+    padding: 10px 18px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 6px; color: #c9a84c; cursor: pointer;
+    font-family: 'Cinzel', serif; font-size: 0.8em; white-space: nowrap;
+  }
+  .api-key-status { font-size: 0.8em; margin-top: 4px; height: 1.2em; }
+  .api-key-status.saved { color: #6a9955; }
+
+  /* Buttons */
+  .btn {
+    display: inline-block; padding: 14px 36px;
+    background: linear-gradient(135deg, #2a1f4e, #1a1235);
+    border: 2px solid #c9a84c; border-radius: 8px;
+    color: #c9a84c; font-family: 'Cinzel', serif;
+    font-size: 1.1em; cursor: pointer;
+    letter-spacing: 2px; transition: all 0.3s; text-transform: uppercase;
+  }
+  .btn:hover { background: linear-gradient(135deg, #3a2f5e, #2a1f4e); box-shadow: 0 0 25px rgba(201,168,76,0.3); transform: translateY(-2px); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-row { text-align: center; margin: 25px 0; }
+  .btn-secondary {
+    display: inline-block; padding: 10px 24px;
+    background: transparent; border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 6px; color: #c9a84c; cursor: pointer;
+    font-family: 'Cinzel', serif; font-size: 0.9em;
+    letter-spacing: 1px; transition: all 0.3s;
+  }
+  .btn-secondary:hover { border-color: #c9a84c; box-shadow: 0 0 15px rgba(201,168,76,0.2); }
+
+  /* Birthdate step */
+  .birthdate-section { text-align: center; margin: 30px auto; max-width: 400px; }
+  .birthdate-section h2 { color: #c9a84c; margin-bottom: 15px; font-size: 1.3em; }
+  .birthdate-section input[type="date"] {
+    padding: 12px 18px; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.3); border-radius: 6px;
+    color: #d4c5a0; font-family: 'Crimson Text', serif; font-size: 1.1em;
+    color-scheme: dark;
+  }
+
+  /* Significator reveal */
+  .sig-reveal { text-align: center; margin: 30px auto; }
+  .sig-reveal h2 { color: #c9a84c; margin-bottom: 8px; }
+  .sig-reveal .zodiac-name { font-size: 1.2em; color: #b8a882; margin-bottom: 20px; font-style: italic; }
+  .sig-card-display {
+    width: 170px; height: 264px; margin: 0 auto 20px;
+    border-radius: 8px; overflow: hidden; border: 2px solid #c9a84c;
+  }
+  .sig-card-display img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Shuffle step */
+  .shuffle-section { text-align: center; margin: 30px auto; max-width: 600px; }
+  .shuffle-section h2 { color: #c9a84c; margin-bottom: 15px; }
+  .shuffle-section p { margin-bottom: 20px; color: #8a7d65; font-style: italic; }
+
+  .deck-stack {
+    position: relative; width: 170px; height: 264px;
+    margin: 0 auto 30px;
+  }
+  .deck-stack .stack-card {
+    position: absolute; width: 170px; height: 264px;
+    background: linear-gradient(135deg, #1a0a3e, #2d1b69);
+    border: 2px solid #c9a84c; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .deck-stack .stack-card .back-inner {
+    width: 90%; height: 90%;
+    border: 1px solid rgba(201,168,76,0.4); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    background: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(201,168,76,0.05) 5px, rgba(201,168,76,0.05) 10px);
+  }
+  .deck-stack .stack-card .back-inner::after {
+    content: '\2726'; font-size: 2.5em; color: #c9a84c;
+    text-shadow: 0 0 10px rgba(201,168,76,0.5);
+  }
+
+  @keyframes shuffleAnim {
+    0% { transform: translate(0,0) rotate(0deg); }
+    25% { transform: translate(calc(var(--sx)*1px), calc(var(--sy)*1px)) rotate(calc(var(--sr)*1deg)); }
+    50% { transform: translate(calc(var(--sx)*-0.5px), calc(var(--sy)*-0.5px)) rotate(calc(var(--sr)*-0.5deg)); }
+    100% { transform: translate(0,0) rotate(0deg); }
+  }
+  .deck-stack.shuffling .stack-card {
+    animation: shuffleAnim 0.6s ease-in-out;
+  }
+
+  /* Cut step */
+  .cut-section { text-align: center; margin: 30px auto; }
+  .cut-section h2 { color: #c9a84c; margin-bottom: 8px; }
+  .cut-counter { color: #8a7d65; font-style: italic; margin-bottom: 5px; }
+  .cut-instruction { color: #b8a882; margin-bottom: 20px; font-size: 1.05em; }
+
+  .card-fan {
+    display: flex; justify-content: center; align-items: flex-end;
+    height: 200px; margin: 20px auto; max-width: 900px;
+    position: relative; padding: 0 20px;
+  }
+  .fan-card {
+    width: 40px; height: 140px; flex-shrink: 0;
+    background: linear-gradient(135deg, #1a0a3e, #2d1b69);
+    border: 1px solid rgba(201,168,76,0.5); border-radius: 4px;
+    cursor: pointer; transition: all 0.2s;
+    margin: 0 -8px; position: relative;
+  }
+  .fan-card:hover { transform: translateY(-10px); box-shadow: 0 0 12px rgba(201,168,76,0.3); z-index: 5; }
+  .fan-card.cut-mark { border-color: #c9a84c; box-shadow: 0 0 15px rgba(201,168,76,0.5); }
+
+  .piles-container {
+    display: flex; justify-content: center; gap: 40px;
+    margin: 20px auto; padding: 20px;
+  }
+  .pile {
+    cursor: pointer; text-align: center; transition: all 0.3s;
+    padding: 15px; border-radius: 10px;
+    border: 2px solid transparent;
+  }
+  .pile:hover { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.05); }
+  .pile.selected { border-color: #c9a84c; background: rgba(201,168,76,0.1); }
+  .pile-cards {
+    position: relative; width: 80px; height: 120px; margin: 0 auto 10px;
+  }
+  .pile-cards .pile-card {
+    position: absolute; width: 80px; height: 120px;
+    background: linear-gradient(135deg, #1a0a3e, #2d1b69);
+    border: 1px solid rgba(201,168,76,0.5); border-radius: 4px;
+  }
+  .pile-label { font-family: 'Cinzel', serif; font-size: 0.8em; color: #8a7d65; }
+  .pile-order {
+    font-family: 'Cinzel', serif; font-size: 1.2em; color: #c9a84c;
+    margin-top: 5px; min-height: 1.5em;
+  }
+
+  /* Deal step & Celtic Cross Layout */
+  .cross-layout {
+    display: grid;
+    grid-template-columns: 200px 200px 200px 60px 200px;
+    grid-template-rows: 310px 310px 310px 310px;
+    gap: 12px;
+    justify-content: center; align-items: center;
+    margin: 0 auto; max-width: 1100px;
+  }
+
+  .pos-sig { grid-column: 2; grid-row: 2; z-index: 0; }
+  .pos-1 { grid-column: 2; grid-row: 2; z-index: 1; }
+  .pos-2 { grid-column: 2; grid-row: 2; z-index: 2; }
+  .pos-3 { grid-column: 2; grid-row: 3; }
+  .pos-4 { grid-column: 1; grid-row: 2; }
+  .pos-5 { grid-column: 2; grid-row: 1; }
+  .pos-6 { grid-column: 3; grid-row: 2; }
+  .pos-7 { grid-column: 5; grid-row: 4; }
+  .pos-8 { grid-column: 5; grid-row: 3; }
+  .pos-9 { grid-column: 5; grid-row: 2; }
+  .pos-10-wrapper { grid-column: 5; grid-row: 1; }
+
+  .card-slot {
+    width: 170px; height: 264px; perspective: 800px;
+    margin: 0 auto; cursor: pointer; position: relative;
+  }
+  .card-labels { text-align: center; margin-top: 6px; }
+  .pos-2 { position: relative; }
+  .pos-2 .position-overlay {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(26, 18, 53, 0.85);
+    border: 1px solid rgba(201, 168, 76, 0.5);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #8a7d65;
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.75em;
+    white-space: nowrap;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .pos-2:has(.flipped) .position-overlay { display: none; }
+  .position-label {
+    font-size: 0.85em; color: #8a7d65; white-space: nowrap;
+    font-family: 'Cinzel', serif; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .card-name-label {
+    display: none; font-size: 0.8em; color: #c9a84c;
+    white-space: nowrap; font-family: 'Crimson Text', serif;
+    font-style: italic; margin-top: 3px;
+  }
+  .card-slot.flipped .card-name-label { display: block; }
+
+  .card-inner {
+    width: 100%; height: 100%; position: relative;
+    transform-style: preserve-3d; transition: transform 0.8s ease;
+  }
+  .card-inner.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden; border-radius: 8px; overflow: hidden;
+  }
+  .card-back {
+    background: linear-gradient(135deg, #1a0a3e, #2d1b69);
+    border: 2px solid #c9a84c;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-back-pattern {
+    width: 90%; height: 90%;
+    border: 1px solid rgba(201,168,76,0.4); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    background: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(201,168,76,0.05) 5px, rgba(201,168,76,0.05) 10px);
+  }
+  .card-back-pattern::after {
+    content: '\2726'; font-size: 2.5em; color: #c9a84c;
+    text-shadow: 0 0 10px rgba(201,168,76,0.5);
+  }
+  .card-front {
+    background: #f5f0e1; border: 2px solid #c9a84c;
+    transform: rotateY(180deg);
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .card-front img { width: 100%; height: 100%; object-fit: cover; }
+  .card-front.reversed img { transform: rotate(180deg); }
+  .reversed-badge {
+    position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+    background: rgba(139,0,0,0.85); color: #fff; font-size: 0.55em;
+    padding: 2px 8px; border-radius: 3px; font-family: 'Cinzel', serif;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* Significator in grid - shown face up, no flip */
+  .sig-in-grid {
+    width: 170px; height: 264px; margin: 0 auto;
+    border-radius: 8px; overflow: hidden; border: 2px solid #c9a84c;
+    opacity: 0.6;
+  }
+  .sig-in-grid img { width: 100%; height: 100%; object-fit: cover; }
+
+  .pos-2 .card-slot { transform: rotate(90deg); }
+
+  /* Sticky action bar */
+  .sticky-bar {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+    background: linear-gradient(to top, rgba(10,10,26,0.98), rgba(26,18,53,0.95));
+    border-top: 1px solid rgba(201,168,76,0.3);
+    padding: 15px 20px; text-align: center;
+    backdrop-filter: blur(10px);
+  }
+  .sticky-bar.visible { display: block; }
+  .sticky-bar .pos-info {
+    font-family: 'Cinzel', serif; color: #c9a84c;
+    font-size: 0.95em; margin-bottom: 4px;
+  }
+  .sticky-bar .pos-desc {
+    color: #8a7d65; font-style: italic; font-size: 0.85em;
+    margin-bottom: 12px; max-width: 600px; margin-left: auto; margin-right: auto;
+  }
+
+  /* Add bottom padding to body when sticky bar is visible so content isn't hidden behind it */
+  body.has-sticky-bar { padding-bottom: 140px; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.8); z-index: 100;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal {
+    background: linear-gradient(135deg, #1a1235, #0a0a1a);
+    border: 2px solid #c9a84c; border-radius: 12px;
+    padding: 30px; max-width: 450px; width: 90%; text-align: center;
+  }
+  .modal img { width: 150px; border-radius: 6px; border: 1px solid #c9a84c; margin-bottom: 15px; }
+  .modal img.reversed { transform: rotate(180deg); }
+  .modal h3 { color: #c9a84c; margin-bottom: 5px; font-size: 1.3em; }
+  .modal .position-info { color: #8a7d65; font-size: 0.85em; margin-bottom: 12px; }
+  .modal .orientation {
+    display: inline-block; padding: 3px 12px; border-radius: 4px;
+    font-size: 0.8em; margin-bottom: 12px; font-family: 'Cinzel', serif;
+  }
+  .modal .orientation.upright { background: rgba(106,153,85,0.2); color: #6a9955; border: 1px solid rgba(106,153,85,0.4); }
+  .modal .orientation.reversed-tag { background: rgba(139,0,0,0.2); color: #c44; border: 1px solid rgba(139,0,0,0.4); }
+  .modal .meaning { font-style: italic; line-height: 1.6; color: #b8a882; }
+  .modal .close-btn {
+    margin-top: 18px; padding: 8px 24px; background: transparent;
+    border: 1px solid #c9a84c; border-radius: 6px; color: #c9a84c;
+    cursor: pointer; font-family: 'Cinzel', serif;
+  }
+
+  /* Deal layout: spread + reading panel side by side */
+  .deal-layout {
+    display: flex; gap: 24px; align-items: flex-start;
+    justify-content: center;
+  }
+  .deal-layout .spread { flex: 0 0 auto; }
+
+  /* Reading panel (sidebar on desktop) */
+  .reading-panel {
+    display: none;
+    flex: 1 1 350px; max-width: 420px; min-width: 280px;
+    background: linear-gradient(135deg, rgba(26,18,53,0.6), rgba(10,10,26,0.8));
+    border: 1px solid rgba(201,168,76,0.3); border-radius: 12px;
+    padding: 24px;
+  }
+  .reading-panel.visible { display: block; }
+  @keyframes panel-pulse {
+    0%, 100% { border-color: rgba(201,168,76,0.3); box-shadow: 0 0 0 rgba(201,168,76,0); }
+    50% { border-color: rgba(201,168,76,0.6); box-shadow: 0 0 12px rgba(201,168,76,0.15); }
+  }
+  .reading-panel.streaming { animation: panel-pulse 1s ease-in-out infinite; }
+  .reading-panel .drawer-handle { display: none; }
+
+  .reading-panel-header {
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    padding-bottom: 12px; margin-bottom: 16px;
+  }
+  .reading-panel-header h3 {
+    color: #c9a84c; font-family: 'Cinzel', serif;
+    font-size: 1.1em; margin: 0 0 4px;
+  }
+  .reading-panel-header .card-orientation {
+    display: inline-block; padding: 2px 10px; border-radius: 4px;
+    font-size: 0.75em; font-family: 'Cinzel', serif;
+  }
+  .reading-panel-header .card-orientation.upright {
+    background: rgba(106,153,85,0.2); color: #6a9955;
+    border: 1px solid rgba(106,153,85,0.4);
+  }
+  .reading-panel-header .card-orientation.reversed {
+    background: rgba(139,0,0,0.2); color: #c44;
+    border: 1px solid rgba(139,0,0,0.4);
+  }
+  .reading-panel-header .pos-desc {
+    color: #8a7d65; font-style: italic; font-size: 0.85em; margin-top: 6px;
+  }
+
+  .reading-panel-content {
+    line-height: 1.8; font-size: 1.05em; white-space: pre-wrap;
+  }
+  .reading-panel-content .cursor {
+    display: inline-block; width: 2px; height: 1.1em;
+    background: #c9a84c; animation: blink 0.8s infinite;
+    vertical-align: text-bottom; margin-left: 2px;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  .loading-indicator { text-align: center; color: #8a7d65; font-style: italic; }
+  .loading-indicator .dots::after { content: ''; animation: dots 1.5s infinite; }
+  @keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
+
+  /* Reading nav dots */
+  .reading-panel-nav {
+    display: flex; justify-content: center; gap: 6px;
+    margin-top: 16px; padding-top: 12px;
+    border-top: 1px solid rgba(201,168,76,0.2);
+    flex-wrap: wrap;
+  }
+  .reading-panel-nav .nav-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.2); background: transparent;
+    color: #555; font-size: 0.7em; font-family: 'Cinzel', serif;
+    cursor: default; display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+  }
+  .reading-panel-nav .nav-dot.available {
+    border-color: rgba(201,168,76,0.5); color: #c9a84c; cursor: pointer;
+  }
+  .reading-panel-nav .nav-dot.active {
+    background: rgba(201,168,76,0.2); border-color: #c9a84c;
+    color: #c9a84c; box-shadow: 0 0 8px rgba(201,168,76,0.3);
+  }
+
+  /* Card correspondences */
+  .card-correspondences {
+    margin: 8px 0 12px;
+    padding: 10px 14px;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 8px;
+  }
+  .corresp-row { display: flex; margin: 3px 0; font-size: 0.85em; line-height: 1.5; }
+  .corresp-label {
+    width: 100px; flex-shrink: 0;
+    color: #8a7d65; font-family: 'Cinzel', serif; font-size: 0.8em;
+  }
+  .corresp-value { color: #e0d4be; }
+  .corresp-value .hebrew-letter { font-size: 1.15em; }
+
+  /* Tree of Life inline container */
+  .tol-container {
+    margin: 12px 0; text-align: center;
+    border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 8px; padding: 8px;
+    background: rgba(8,12,31,0.4);
+    cursor: pointer;
+  }
+  .tol-container svg { max-width: 100%; height: auto; max-height: 300px; display: block; margin: 0 auto; }
+  .tol-container .seph-group { cursor: default; pointer-events: none; }
+  .tol-container .path-group { pointer-events: none; }
+  .tol-container .daath-group { pointer-events: none; }
+  .tol-container .seph-num { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 20px; font-weight: 700; }
+  .tol-container .seph-hebrew { font-size: 18px; fill: #e8d892; text-anchor: middle; }
+  .tol-container .seph-english { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; fill: #c9a84c; text-anchor: middle; }
+  .tol-container .path-line { stroke: rgba(180,155,80,0.16); stroke-width: 14; stroke-linecap: round; fill: none; }
+  .tol-container .path-hit { stroke: transparent; stroke-width: 24; fill: none; }
+  .tol-container .path-letter { font-size: 15px; fill: rgba(201,168,76,0.55); text-anchor: middle; font-family: 'Segoe UI', system-ui, sans-serif; }
+  .tol-container .daath-circle { fill: rgba(100,100,180,0.12); stroke: rgba(160,160,220,0.3); stroke-width: 1.8; stroke-dasharray: 6 4; }
+  .tol-container .pillar-label { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; fill: rgba(201,168,76,0.18); text-anchor: middle; letter-spacing: .15em; }
+  .tol-container .dimmed .seph-circle { opacity: .18; }
+  .tol-container .dimmed .seph-num,
+  .tol-container .dimmed .seph-hebrew,
+  .tol-container .dimmed .seph-english { opacity: .15; }
+  .tol-container .dimmed .path-line { stroke-opacity: .1; }
+  .tol-container .dimmed .path-letter { opacity: .1; }
+  .tol-container .dimmed .daath-circle { opacity: .1; }
+  .tol-container .highlighted .seph-circle { filter: url(#tol-glow); stroke-width: 2.5; }
+  .tol-container .highlighted .path-line { stroke: rgba(232,216,146,0.35); stroke-width: 16; }
+  .tol-container .selected-seph .seph-circle { filter: url(#tol-glow-strong); }
+  .tol-container .selected-path .path-line { stroke: rgba(232,216,146,0.5); stroke-width: 18; }
+  .tol-container .selected-path .path-letter { fill: #e8d892; opacity: 1; }
+  @keyframes tol-pulse { 0%,100% { filter: url(#tol-glow); } 50% { filter: url(#tol-glow-strong); } }
+  .tol-container .selected-seph .seph-circle { animation: tol-pulse 2s ease-in-out infinite; }
+
+  /* Explore Tree button */
+  .tol-explore-btn {
+    display: inline-block; margin-top: 8px;
+    padding: 5px 18px; background: transparent;
+    border: 1px solid rgba(201,168,76,0.5); border-radius: 5px;
+    color: #c9a84c; font-size: 0.75em; font-family: 'Cinzel', serif;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.03em;
+  }
+  .tol-explore-btn:hover { background: rgba(201,168,76,0.12); border-color: #c9a84c; }
+
+  /* Tree of Life full modal */
+  .tol-modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85); z-index: 200;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .tol-modal-overlay.visible { display: flex; }
+  .tol-modal {
+    display: flex; width: 100%; height: 100%; position: relative;
+    background: radial-gradient(ellipse at 50% 30%, #111640 0%, #080c1f 70%);
+    border: 1px solid rgba(201,168,76,0.35); border-radius: 12px;
+    overflow: hidden;
+  }
+  .tol-modal-tree {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 10px; min-width: 0; overflow: hidden;
+  }
+  .tol-modal-tree svg { max-width: 100%; max-height: 100%; display: block; }
+  .tol-modal-tree .seph-group { cursor: pointer; }
+  .tol-modal-tree .seph-circle { transition: filter .3s, stroke-width .3s; }
+  .tol-modal-tree .seph-group:hover .seph-circle { filter: url(#tolm-glow); }
+  .tol-modal-tree .seph-num { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 20px; font-weight: 700; pointer-events: none; }
+  .tol-modal-tree .seph-hebrew { font-size: 18px; fill: #e8d892; pointer-events: none; text-anchor: middle; }
+  .tol-modal-tree .seph-english { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; fill: #c9a84c; pointer-events: none; text-anchor: middle; }
+  .tol-modal-tree .path-hit { stroke: transparent; stroke-width: 24; fill: none; cursor: pointer; }
+  .tol-modal-tree .path-line { stroke: rgba(180,155,80,0.16); stroke-width: 14; stroke-linecap: round; fill: none; pointer-events: none; transition: stroke .3s, stroke-width .3s; }
+  .tol-modal-tree .path-group:hover .path-line { stroke: rgba(201,168,76,0.32); stroke-width: 16; }
+  .tol-modal-tree .path-letter { font-size: 15px; fill: rgba(201,168,76,0.55); pointer-events: none; text-anchor: middle; font-family: 'Segoe UI', system-ui, sans-serif; }
+  .tol-modal-tree .daath-circle { fill: rgba(100,100,180,0.12); stroke: rgba(160,160,220,0.3); stroke-width: 1.8; stroke-dasharray: 6 4; cursor: pointer; }
+  .tol-modal-tree .daath-circle:hover { fill: rgba(100,100,180,0.25); }
+  .tol-modal-tree .pillar-label { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; fill: rgba(201,168,76,0.18); text-anchor: middle; letter-spacing: .15em; }
+  .tol-modal-tree .dimmed .seph-circle { opacity: .18; }
+  .tol-modal-tree .dimmed .seph-num, .tol-modal-tree .dimmed .seph-hebrew, .tol-modal-tree .dimmed .seph-english { opacity: .15; }
+  .tol-modal-tree .dimmed .path-line { stroke-opacity: .1; }
+  .tol-modal-tree .dimmed .path-letter { opacity: .1; }
+  .tol-modal-tree .dimmed .daath-circle { opacity: .1; }
+  .tol-modal-tree .highlighted .seph-circle { filter: url(#tolm-glow); stroke-width: 2.5; }
+  .tol-modal-tree .highlighted .path-line { stroke: rgba(232,216,146,0.35); stroke-width: 16; }
+  .tol-modal-tree .selected-seph .seph-circle { filter: url(#tolm-glow-strong); }
+  .tol-modal-tree .selected-path .path-line { stroke: rgba(232,216,146,0.5); stroke-width: 18; }
+  .tol-modal-tree .selected-path .path-letter { fill: #e8d892; opacity: 1; }
+  @keyframes tolm-pulse { 0%,100% { filter: url(#tolm-glow); } 50% { filter: url(#tolm-glow-strong); } }
+  .tol-modal-tree .selected-seph .seph-circle { animation: tolm-pulse 2s ease-in-out infinite; }
+
+  .tol-modal-close {
+    position: absolute; top: 12px; right: 12px; z-index: 5;
+    background: rgba(8,12,31,0.8); border: 1px solid rgba(201,168,76,0.3);
+    color: #c9a84c; font-size: 1.6rem; width: 40px; height: 40px;
+    cursor: pointer; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tol-modal-close:hover { background: rgba(201,168,76,0.15); }
+
+  /* Modal detail panel */
+  .tol-modal-panel {
+    width: 400px; flex-shrink: 0;
+    background: rgba(8,12,31,0.97);
+    border-left: 1px solid rgba(201,168,76,0.25);
+    overflow-y: auto; padding: 0; position: relative;
+    transform: translateX(100%); transition: transform .35s cubic-bezier(.4,0,.2,1);
+  }
+  .tol-modal-panel.open { transform: translateX(0); }
+  .tol-panel-content { padding: 0 24px 30px; }
+  .tol-panel-content .tp-header { padding: 20px 0 16px; border-bottom: 1px solid rgba(201,168,76,0.25); margin-bottom: 16px; }
+  .tol-panel-content .tp-num {
+    display: inline-block; width: 28px; height: 28px; border-radius: 50%;
+    text-align: center; line-height: 28px; font-size: 13px; font-weight: 700;
+    margin-right: 8px; vertical-align: middle;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .tol-panel-content .tp-name { font-size: 1.5rem; vertical-align: middle; }
+  .tol-panel-content .tp-hebrew { font-size: 1.6rem; display: block; margin-top: 6px; direction: rtl; }
+  .tol-panel-content .tp-pronun { font-size: .85rem; color: #8a7f6e; margin-top: 4px; font-style: italic; }
+  .tol-panel-content .tp-meaning { font-size: .95rem; color: #c9a84c; margin-top: 2px; }
+  .tol-panel-content .tp-also { font-size: .8rem; color: #8a7f6e; margin-top: 2px; }
+  .tol-panel-content .tp-section { margin: 14px 0; padding: 14px 0; border-top: 1px solid rgba(201,168,76,0.25); }
+  .tol-panel-content .tp-section-title { font-size: .7rem; text-transform: uppercase; letter-spacing: .2em; color: #c9a84c; margin-bottom: 10px; }
+  .tol-panel-content .tp-row { display: flex; margin: 6px 0; font-size: .88rem; line-height: 1.5; }
+  .tol-panel-content .tp-label { width: 115px; flex-shrink: 0; color: #8a7f6e; font-family: 'Segoe UI', system-ui, sans-serif; font-size: .78rem; }
+  .tol-panel-content .tp-value { flex: 1; color: #e0d4be; }
+  .tol-panel-content .tp-value .heb { direction: rtl; display: inline; unicode-bidi: bidi-override; }
+  .tol-panel-content .tp-image { font-style: italic; color: #e8d892; font-size: .9rem; line-height: 1.6; }
+  .tol-panel-content .tp-colors { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+  .tol-panel-content .tp-color-item { font-size: .82rem; }
+  .tol-panel-content .tp-color-item b { font-weight: 400; color: #8a7f6e; font-size: .75rem; }
+  .tol-panel-content .tp-virtues { display: flex; gap: 20px; font-size: .88rem; }
+  .tol-panel-content .tp-virtues div b { font-weight: 400; color: #8a7f6e; font-size: .78rem; display: block; }
+  .tol-panel-content .tp-qliphoth-name { font-size: 1rem; color: #cc6666; margin-bottom: 4px; }
+  .tol-panel-content .tp-qliphoth-meaning { font-size: .82rem; color: #8a7f6e; margin-bottom: 6px; font-style: italic; }
+  .tol-panel-content .tp-qliphoth-desc { font-size: .85rem; line-height: 1.5; }
+  .tol-panel-content .tp-desc { font-size: .88rem; line-height: 1.65; color: #e0d4be; }
+  .tol-panel-content .tp-path-letter { font-size: 3rem; text-align: center; direction: rtl; }
+  .tol-panel-content .tp-path-lettername { font-size: 1.3rem; text-align: center; }
+  .tol-panel-content .tp-path-meaning { font-size: .9rem; text-align: center; color: #8a7f6e; margin-top: 2px; }
+  .tol-panel-content .tp-connecting { text-align: center; font-size: .95rem; margin: 8px 0; }
+  .tol-panel-content .tp-connecting span { color: #c9a84c; }
+  .tol-panel-content .tp-tarot { font-size: 1.05rem; text-align: center; margin: 6px 0; color: #e8d892; }
+  .tol-panel-content .tp-attrib { font-size: .9rem; text-align: center; color: #8a7f6e; }
+
+  @media (max-width: 860px) {
+    .tol-modal-panel { position: fixed; top: 0; right: 0; width: 100%; height: 100%; z-index: 10; max-width: 420px; }
+  }
+  @media (max-width: 500px) {
+    .tol-modal-panel { max-width: 100%; }
+  }
+
+  /* Active card glow in spread */
+  .card-slot.active-reading .card-inner {
+    box-shadow: 0 0 15px rgba(201,168,76,0.5);
+    border-radius: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .cross-layout {
+      grid-template-columns: 150px 150px 150px 30px 150px;
+      grid-template-rows: 260px 260px 260px 260px; gap: 8px;
+    }
+    .card-slot, .sig-in-grid { width: 130px; height: 202px; }
+    .position-label { font-size: 0.75em; }
+    .card-name-label { font-size: 0.7em; }
+    .reading-panel { min-width: 240px; max-width: 350px; padding: 18px; }
+  }
+  @media (max-width: 768px) {
+    .cross-layout {
+      grid-template-columns: 110px 110px 110px 20px 110px;
+      grid-template-rows: 210px 210px 210px 210px; gap: 6px;
+    }
+    .card-slot, .sig-in-grid { width: 100px; height: 155px; }
+    .position-label { font-size: 0.65em; }
+    .card-name-label { font-size: 0.6em; }
+    header h1 { font-size: 1.6em; }
+    .sig-card-display { width: 130px; height: 202px; }
+    .deck-stack, .deck-stack .stack-card { width: 130px; height: 202px; }
+    .deal-layout { flex-direction: column; align-items: center; }
+    .reading-panel {
+      position: fixed; bottom: 0; left: 0; right: 0; top: auto;
+      max-width: 100%; min-width: auto; width: 100%;
+      max-height: 45vh; border-radius: 12px 12px 0 0;
+      z-index: 45; padding: 0 18px 18px;
+      transform: translateY(calc(100% - 48px));
+      transition: transform 0.3s ease;
+    }
+    .reading-panel.visible { display: block; }
+    .reading-panel.expanded { transform: translateY(0); }
+    .reading-panel .drawer-handle {
+      display: block; text-align: center; padding: 12px 0 8px; cursor: pointer;
+    }
+    .reading-panel .drawer-handle::before {
+      content: ''; display: inline-block; width: 40px; height: 4px;
+      border-radius: 2px; background: rgba(201,168,76,0.4);
+    }
+    body.has-sticky-bar { padding-bottom: 200px; }
+  }
+  @media (max-width: 580px) {
+    .cross-layout {
+      grid-template-columns: 80px 80px 80px 15px 80px;
+      grid-template-rows: 170px 170px 170px 170px; gap: 4px;
+    }
+    .card-slot, .sig-in-grid { width: 72px; height: 112px; }
+    .position-label { font-size: 0.55em; }
+    .card-name-label { font-size: 0.5em; }
+    .sig-card-display { width: 100px; height: 155px; }
+    .deck-stack, .deck-stack .stack-card { width: 100px; height: 155px; }
+    .fan-card { width: 25px; height: 100px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Celtic Cross Tarot</h1>
+    <p>Seek the wisdom of the cards</p>
+  </header>
+
+  <div class="api-key-section" id="apiKeySection">
+    <label>Anthropic API Key</label>
+    <div class="api-key-row">
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-..." />
+      <button onclick="saveApiKey()">Save</button>
+    </div>
+    <div class="api-key-status" id="apiKeyStatus"></div>
+  </div>
+
+  <!-- Step 1: Birthdate -->
+  <div class="step" id="stepBirthdate">
+    <div class="birthdate-section">
+      <h2>Enter Your Birthdate</h2>
+      <p style="color:#8a7d65;font-style:italic;margin-bottom:15px;">Your zodiac sign determines your significator card</p>
+      <input type="date" id="birthdateInput" />
+      <div class="btn-row">
+        <button class="btn" onclick="submitBirthdate()">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Significator Reveal -->
+  <div class="step" id="stepSignificator">
+    <div class="sig-reveal">
+      <h2>Your Significator</h2>
+      <div class="zodiac-name" id="zodiacName"></div>
+      <div class="sig-card-display" id="sigCardDisplay"></div>
+      <div style="margin-top:10px;font-size:1.1em;color:#c9a84c;" id="sigCardName"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="goToShuffle()">Shuffle the Deck</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Shuffle -->
+  <div class="step" id="stepShuffle">
+    <div class="shuffle-section">
+      <h2>Shuffle the Deck</h2>
+      <p>Focus on your question and shuffle until you feel ready</p>
+      <div class="deck-stack" id="deckStack"></div>
+      <div class="btn-row" style="display:flex;justify-content:center;gap:15px;">
+        <button class="btn" onclick="doShuffle()">Shuffle</button>
+        <button class="btn-secondary" onclick="goToCut()">Done Shuffling</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4: Cut -->
+  <div class="step" id="stepCut">
+    <div class="cut-section">
+      <h2>Cut the Deck</h2>
+      <div class="cut-counter" id="cutCounter">Cut 1 of 3</div>
+      <div class="cut-instruction" id="cutInstruction">Click two cards to divide the deck into three piles</div>
+      <div class="card-fan" id="cardFan"></div>
+      <div class="piles-container" id="pilesContainer" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Step 5: Deal -->
+  <div class="step" id="stepDeal">
+    <div class="deal-layout">
+      <div class="spread">
+        <div class="cross-layout">
+          <div class="pos-sig" id="slot-sig"></div>
+          <div class="pos-1" id="slot-0"></div>
+          <div class="pos-2" id="slot-1"></div>
+          <div class="pos-3" id="slot-2"></div>
+          <div class="pos-4" id="slot-3"></div>
+          <div class="pos-5" id="slot-4"></div>
+          <div class="pos-6" id="slot-5"></div>
+          <div class="pos-7" id="slot-6"></div>
+          <div class="pos-8" id="slot-7"></div>
+          <div class="pos-9" id="slot-8"></div>
+          <div class="pos-10-wrapper" id="slot-9"></div>
+        </div>
+      </div>
+      <div class="reading-panel" id="readingPanel">
+        <div class="drawer-handle" onclick="toggleReadingDrawer()"></div>
+        <div class="reading-panel-header" id="readingPanelHeader"></div>
+        <div id="readingPanelCorrespondences"></div>
+        <div class="tol-container" id="treeContainer" style="display:none;"></div>
+        <div class="reading-panel-content" id="readingPanelContent"></div>
+        <div class="reading-panel-nav" id="readingPanelNav"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky action bar (fixed at bottom during deal) -->
+  <div class="sticky-bar" id="stickyBar">
+    <div class="pos-info" id="stickyPosInfo"></div>
+    <div class="pos-desc" id="stickyPosDesc"></div>
+    <button class="btn" id="stickyBtn" onclick="dealNextCard()">Reveal Next Card</button>
+  </div>
+
+  <div class="footer" style="text-align:center;margin:40px 0 20px;font-size:0.8em;">
+    <a href="#" onclick="resetApiKey();return false" style="color:#8a7d65;text-decoration:underline;">Reset API Key</a>
+    <span style="margin:0 10px;color:#333;">|</span>
+    <a href="#" onclick="startOver();return false" style="color:#8a7d65;text-decoration:underline;">New Reading</a>
+  </div>
+
+  <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+    <div class="modal">
+      <img id="modalImg" src="" alt="Card" />
+      <h3 id="modalName"></h3>
+      <div class="position-info" id="modalPosition"></div>
+      <div id="modalOrientation"></div>
+      <div class="meaning" id="modalMeaning"></div>
+      <button class="close-btn" onclick="document.getElementById('modal').classList.remove('visible')">Close</button>
+    </div>
+  </div>
+
+  <!-- Tree of Life full modal -->
+  <div class="tol-modal-overlay" id="tolModal">
+    <div class="tol-modal">
+      <div class="tol-modal-tree" id="tolModalTree"></div>
+      <div class="tol-modal-panel" id="tolModalPanel">
+          <div class="tol-panel-content" id="tolModalPanelContent"></div>
+      </div>
+      <button class="tol-modal-close" onclick="closeTreeModal()">&times;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const POSITIONS = [
+  "The Present",
+  "The Challenge",
+  "The Foundation",
+  "The Recent Past",
+  "The Crown",
+  "The Near Future",
+  "The Self",
+  "The Environment",
+  "Hopes & Fears",
+  "The Outcome"
+];
+
+const POSITION_DESC = [
+  "This card covers you — it represents your current situation, the energies surrounding you right now.",
+  "This card crosses you — it reveals the immediate challenge or obstacle you face. It may oppose or complement the first card.",
+  "This card is beneath you — it shows the foundation, the root cause or subconscious influence that underlies everything.",
+  "This card is behind you — it represents the recent past and the energies that are now fading.",
+  "This card crowns you — it shows the best possible outcome, your highest aspirations for this situation.",
+  "This card is before you — it reveals what is approaching in the near future.",
+  "This card represents you — your current attitude, how you see yourself in this situation.",
+  "This card represents your environment — the external influences, the people and energies around you.",
+  "This card reveals your hopes and fears — the deepest desires and anxieties you hold within.",
+  "This card is the final outcome — the culmination and resolution of all the forces at play."
+];
+
+const ZODIAC_TO_CARD = {
+  'Aries': 'Queen of Wands',
+  'Taurus': 'Page of Pentacles',
+  'Gemini': 'Knight of Swords',
+  'Cancer': 'Queen of Cups',
+  'Leo': 'Page of Wands',
+  'Virgo': 'Knight of Pentacles',
+  'Libra': 'Queen of Swords',
+  'Scorpio': 'Page of Cups',
+  'Sagittarius': 'King of Wands',
+  'Capricorn': 'Queen of Pentacles',
+  'Aquarius': 'Page of Swords',
+  'Pisces': 'Knight of Cups'
+};
+
+const DECK = [
+  // Major Arcana
+  { name: "The Fool", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/0-The-Fool-Tarot-card-img-182x300-1.jpg", uprightMeaning: "New beginnings, innocence, spontaneity, free spirit", reversedMeaning: "Recklessness, negligence, risk-taking, foolishness" },
+  { name: "The Magician", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/01-The-Magician-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Willpower, manifestation, resourcefulness, skill", reversedMeaning: "Manipulation, cunning, trickery, wasted talent" },
+  { name: "The High Priestess", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/02-The-High-Priestess-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Intuition, mystery, inner knowledge, the subconscious", reversedMeaning: "Secrets withheld, disconnection from intuition, withdrawal" },
+  { name: "The Empress", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/03-The-Empress-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Abundance, nurturing, fertility, nature, sensuality", reversedMeaning: "Dependence, smothering, creative block, neglect" },
+  { name: "The Emperor", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/04-The-Emperor-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Authority, structure, stability, fatherhood, leadership", reversedMeaning: "Tyranny, rigidity, domination, lack of discipline" },
+  { name: "The Hierophant", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/05-The-Hierophant-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Tradition, conformity, spiritual wisdom, mentorship", reversedMeaning: "Rebellion, subversiveness, unconventionality, freedom" },
+  { name: "The Lovers", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/06-The-Lovers-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Love, harmony, relationships, choices, alignment", reversedMeaning: "Disharmony, imbalance, misalignment, indecisiveness" },
+  { name: "The Chariot", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/07-The-Chariot-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Determination, willpower, triumph, control, direction", reversedMeaning: "Lack of direction, aggression, powerlessness" },
+  { name: "Strength", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/08-Strength-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Courage, inner strength, compassion, patience", reversedMeaning: "Self-doubt, weakness, insecurity, raw emotion" },
+  { name: "The Hermit", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/09-The-Hermit-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Introspection, solitude, inner guidance, soul-searching", reversedMeaning: "Isolation, loneliness, withdrawal, lost direction" },
+  { name: "Wheel of Fortune", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/10-The-Wheel-of-Fortune-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Destiny, cycles, turning points, luck, change", reversedMeaning: "Bad luck, resistance to change, breaking cycles" },
+  { name: "Justice", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/11-Justice-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Fairness, truth, law, cause and effect, balance", reversedMeaning: "Injustice, dishonesty, lack of accountability" },
+  { name: "The Hanged Man", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/12-The-Hanged-Man-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Surrender, new perspective, letting go, suspension", reversedMeaning: "Stalling, resistance, indecision, delays" },
+  { name: "Death", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/13-Death-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Transformation, endings, change, transition, release", reversedMeaning: "Resistance to change, fear of change, stagnation" },
+  { name: "Temperance", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/14-Temperance-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Balance, moderation, patience, harmony, purpose", reversedMeaning: "Imbalance, excess, lack of patience, discord" },
+  { name: "The Devil", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/15-The-Devil-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Bondage, materialism, shadow self, attachment", reversedMeaning: "Release, breaking free, reclaiming power, detachment" },
+  { name: "The Tower", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/16-The-Tower-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Upheaval, sudden change, revelation, chaos, awakening", reversedMeaning: "Averting disaster, fear of change, delaying the inevitable" },
+  { name: "The Star", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/17-The-Star-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Hope, renewal, inspiration, serenity, faith", reversedMeaning: "Despair, lack of faith, disconnection, discouragement" },
+  { name: "The Moon", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/18-The-Moon-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Illusion, intuition, uncertainty, the subconscious, dreams", reversedMeaning: "Clarity emerging, release of fear, truth revealed" },
+  { name: "The Sun", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/19-The-Sun-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Joy, success, vitality, warmth, positivity, abundance", reversedMeaning: "Temporary sadness, lack of clarity, overconfidence" },
+  { name: "Judgement", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/20-Judgment-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Rebirth, inner calling, reflection, reckoning, absolution", reversedMeaning: "Self-doubt, refusal of self-examination, ignoring the call" },
+  { name: "The World", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/21-The-World-Tarot-card-img-182x300-1.jpg", uprightMeaning: "Completion, accomplishment, wholeness, travel, fulfillment", reversedMeaning: "Incompletion, shortcuts, delays, emptiness" },
+
+  // Wands
+  { name: "Ace of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/01-ace-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Inspiration, creative spark, new initiative, potential", reversedMeaning: "Delays, lack of motivation, missed opportunity" },
+  { name: "Two of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/02-two-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Planning, future vision, progress, decisions", reversedMeaning: "Fear of the unknown, lack of planning, impatience" },
+  { name: "Three of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/03-three-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Expansion, foresight, overseas opportunities, growth", reversedMeaning: "Obstacles, delays in plans, frustration, restriction" },
+  { name: "Four of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/04-four-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Celebration, harmony, homecoming, community, joy", reversedMeaning: "Lack of harmony, transition, feeling unwelcome" },
+  { name: "Five of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/05-five-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Conflict, competition, tension, disagreement, struggle", reversedMeaning: "Avoidance of conflict, compromise, resolution" },
+  { name: "Six of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/06-six-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Victory, success, recognition, public praise, triumph", reversedMeaning: "Ego, fall from grace, lack of recognition" },
+  { name: "Seven of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/07-seven-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Defensiveness, standing your ground, perseverance", reversedMeaning: "Giving up, overwhelmed, yielding, exhaustion" },
+  { name: "Eight of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/08-eight-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Speed, swift action, movement, rapid change, progress", reversedMeaning: "Delays, frustration, waiting, slowing down" },
+  { name: "Nine of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/09-nine-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Resilience, perseverance, last stand, near completion", reversedMeaning: "Exhaustion, giving up, overwhelmed, paranoia" },
+  { name: "Ten of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/10-ten-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Burden, responsibility, hard work, stress, overcommitment", reversedMeaning: "Release, delegation, setting down burdens" },
+  { name: "Page of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/10-page-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Enthusiasm, exploration, discovery, free spirit", reversedMeaning: "Setbacks, lack of direction, procrastination" },
+  { name: "Knight of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/11-knight-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Adventure, energy, passion, impulsiveness, action", reversedMeaning: "Haste, scattered energy, frustration, delays" },
+  { name: "Queen of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/12-queen-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Confidence, independence, warmth, determination", reversedMeaning: "Selfishness, jealousy, demanding, insecurity" },
+  { name: "King of Wands", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/14-king-of-wands-tarot-card-img-182x300-1.jpg", uprightMeaning: "Leadership, vision, honor, entrepreneurship, boldness", reversedMeaning: "Impulsiveness, ruthlessness, high expectations" },
+
+  // Cups
+  { name: "Ace of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/01-ace-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "New love, compassion, emotional awakening, creativity", reversedMeaning: "Emotional loss, blocked creativity, emptiness" },
+  { name: "Two of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/02-two-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Partnership, unity, mutual attraction, connection", reversedMeaning: "Imbalance, broken communication, tension, separation" },
+  { name: "Three of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/03-three-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Celebration, friendship, community, joy, gathering", reversedMeaning: "Overindulgence, gossip, isolation, excess" },
+  { name: "Four of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/04-four-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Contemplation, apathy, re-evaluation, meditation", reversedMeaning: "Awareness, acceptance, new perspective, motivation" },
+  { name: "Five of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/05-five-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Loss, grief, disappointment, regret, sadness", reversedMeaning: "Acceptance, moving on, finding peace, recovery" },
+  { name: "Six of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/06-six-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Nostalgia, childhood, innocence, reunion, memories", reversedMeaning: "Living in the past, unrealistic expectations, naivety" },
+  { name: "Seven of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/07-seven-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Fantasy, illusion, choices, imagination, wishful thinking", reversedMeaning: "Clarity, focus, making choices, grounding" },
+  { name: "Eight of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/08-eight-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Walking away, disillusionment, leaving behind, seeking truth", reversedMeaning: "Fear of change, stagnation, clinging, avoidance" },
+  { name: "Nine of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/09-nine-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Contentment, satisfaction, wishes fulfilled, gratitude", reversedMeaning: "Dissatisfaction, greed, materialism, unfulfilled wishes" },
+  { name: "Ten of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/10-ten-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Harmony, family, happiness, alignment, fulfillment", reversedMeaning: "Broken family, disharmony, misalignment, neglect" },
+  { name: "Page of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/11-page-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Creative opportunity, intuitive messages, curiosity", reversedMeaning: "Emotional immaturity, creative block, insecurity" },
+  { name: "Knight of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/12-knight-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Romance, charm, imagination, beauty, idealism", reversedMeaning: "Moodiness, unrealistic, jealousy, disappointment" },
+  { name: "Queen of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/13-queen-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Compassion, calm, nurturing, intuitive, empathic", reversedMeaning: "Insecurity, codependency, martyrdom, emotional manipulation" },
+  { name: "King of Cups", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/14-king-of-cups-tarot-card-img-182x300-1.jpg", uprightMeaning: "Emotional balance, diplomacy, wisdom, calm, generosity", reversedMeaning: "Emotional manipulation, coldness, moodiness" },
+
+  // Pentacles
+  { name: "Ace of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/01-ace-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "New financial opportunity, prosperity, manifestation", reversedMeaning: "Lost opportunity, poor planning, scarcity mindset" },
+  { name: "Two of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/02-two-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Balance, adaptability, juggling priorities, flexibility", reversedMeaning: "Overwhelm, disorganization, financial imbalance" },
+  { name: "Three of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/03-three-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Teamwork, collaboration, skill, craftsmanship, learning", reversedMeaning: "Lack of teamwork, poor quality, disorganization" },
+  { name: "Four of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/04-four-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Security, stability, conservation, possessiveness", reversedMeaning: "Generosity, release, letting go, financial insecurity" },
+  { name: "Five of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/05-five-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Hardship, loss, isolation, financial difficulty, worry", reversedMeaning: "Recovery, improvement, turning a corner, charity" },
+  { name: "Six of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/06-six-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Generosity, charity, giving and receiving, sharing wealth", reversedMeaning: "Strings attached, inequality, one-sided charity" },
+  { name: "Seven of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/07-seven-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Patience, long-term investment, perseverance, reward", reversedMeaning: "Impatience, poor returns, lack of growth, frustration" },
+  { name: "Eight of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/08-eight-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Skill development, diligence, mastery, dedication, craft", reversedMeaning: "Perfectionism, lack of focus, shortcuts, mediocrity" },
+  { name: "Nine of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/09-nine-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Luxury, self-sufficiency, financial independence, abundance", reversedMeaning: "Over-investment in work, financial setbacks, superficiality" },
+  { name: "Ten of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/10-ten-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Legacy, wealth, inheritance, family, establishment", reversedMeaning: "Financial failure, family disputes, loss of legacy" },
+  { name: "Page of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/11-page-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Ambition, desire to learn, new financial opportunity", reversedMeaning: "Lack of progress, procrastination, unfocused" },
+  { name: "Knight of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/12-knight-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Hard work, reliability, routine, conservatism, methodical", reversedMeaning: "Boredom, laziness, feeling stuck, perfectionism" },
+  { name: "Queen of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/13-queen-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Nurturing, practical, providing, down-to-earth, abundance", reversedMeaning: "Self-centeredness, jealousy, smothering, financial dependence" },
+  { name: "King of Pentacles", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/14-king-of-pentacles-tarot-card-img-182x300-1.jpg", uprightMeaning: "Wealth, security, leadership, discipline, abundance", reversedMeaning: "Greed, materialism, poor financial decisions, stubbornness" },
+
+  // Swords
+  { name: "Ace of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/01-ace-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Clarity, breakthrough, new idea, truth, mental force", reversedMeaning: "Confusion, chaos, lack of clarity, miscommunication" },
+  { name: "Two of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/02-two-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Indecision, stalemate, difficult choices, blocked emotions", reversedMeaning: "Information overload, overwhelm, lesser of two evils" },
+  { name: "Three of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/03-three-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Heartbreak, sorrow, grief, emotional pain, separation", reversedMeaning: "Recovery, forgiveness, releasing pain, optimism" },
+  { name: "Four of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/04-four-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Rest, recuperation, contemplation, solitude, peace", reversedMeaning: "Restlessness, burnout, need for recovery, stagnation" },
+  { name: "Five of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/05-five-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Conflict, defeat, winning at a cost, tension, hostility", reversedMeaning: "Reconciliation, making amends, moving on, forgiveness" },
+  { name: "Six of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/06-six-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Transition, moving on, leaving behind, mental clarity", reversedMeaning: "Resistance to change, unfinished business, stagnation" },
+  { name: "Seven of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/07-seven-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Deception, strategy, stealth, cunning, resourcefulness", reversedMeaning: "Coming clean, confession, conscience, rethinking approach" },
+  { name: "Eight of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/08-eight-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Restriction, imprisonment, helplessness, self-limiting beliefs", reversedMeaning: "Freedom, release, new perspective, empowerment" },
+  { name: "Nine of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/09-nine-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Anxiety, worry, nightmares, fear, despair, anguish", reversedMeaning: "Hope, recovery, reaching out, overcoming fear" },
+  { name: "Ten of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/10-ten-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Painful ending, rock bottom, betrayal, loss, defeat", reversedMeaning: "Recovery, regeneration, rising up, worst is over" },
+  { name: "Page of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/11-page-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Curiosity, restlessness, mental energy, new ideas", reversedMeaning: "Hasty decisions, gossip, scattered thinking, cynicism" },
+  { name: "Knight of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/12-knight-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Ambition, action-oriented, fast-thinking, driven, assertive", reversedMeaning: "Reckless, impatient, impulsive, unfocused" },
+  { name: "Queen of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/13-queen-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Independent, clear-minded, direct communication, perceptive", reversedMeaning: "Cold-hearted, cruel, bitterness, overly critical" },
+  { name: "King of Swords", img: "https://www.purplegarden.co/blog/wp-content/uploads/2023/03/14-king-of-swords-tarot-card-img-182x300-1.jpg", uprightMeaning: "Intellectual power, authority, truth, clear thinking, ethics", reversedMeaning: "Manipulation, cruelty, abuse of power, dishonesty" }
+];
+
+// ─── Kabbalistic Correspondences ───
+const SEPHIROTH_BY_NUMBER = {
+  1: { id: 1, name: 'Kether', meaning: 'Crown' },
+  2: { id: 2, name: 'Chokmah', meaning: 'Wisdom' },
+  3: { id: 3, name: 'Binah', meaning: 'Understanding' },
+  4: { id: 4, name: 'Chesed', meaning: 'Mercy' },
+  5: { id: 5, name: 'Geburah', meaning: 'Severity' },
+  6: { id: 6, name: 'Tiphareth', meaning: 'Beauty' },
+  7: { id: 7, name: 'Netzach', meaning: 'Victory' },
+  8: { id: 8, name: 'Hod', meaning: 'Splendor' },
+  9: { id: 9, name: 'Yesod', meaning: 'Foundation' },
+  10: { id: 10, name: 'Malkuth', meaning: 'Kingdom' }
+};
+
+const SUIT_CORRESPONDENCES = {
+  'Wands':     { element: 'Fire',  sephirah: 'Chokmah', world: 'Atziluth' },
+  'Cups':      { element: 'Water', sephirah: 'Binah',   world: 'Briah' },
+  'Swords':    { element: 'Air',   sephirah: 'Tiphareth', world: 'Yetzirah' },
+  'Pentacles': { element: 'Earth', sephirah: 'Malkuth', world: 'Assiah' }
+};
+
+const THOTH_NAMES = {
+  'Ace of Wands': 'Root of Fire', 'Two of Wands': 'Dominion',
+  'Three of Wands': 'Virtue', 'Four of Wands': 'Completion',
+  'Five of Wands': 'Strife', 'Six of Wands': 'Victory',
+  'Seven of Wands': 'Valour', 'Eight of Wands': 'Swiftness',
+  'Nine of Wands': 'Strength', 'Ten of Wands': 'Oppression',
+  'Ace of Cups': 'Root of Water', 'Two of Cups': 'Love',
+  'Three of Cups': 'Abundance', 'Four of Cups': 'Luxury',
+  'Five of Cups': 'Disappointment', 'Six of Cups': 'Pleasure',
+  'Seven of Cups': 'Debauch', 'Eight of Cups': 'Indolence',
+  'Nine of Cups': 'Happiness', 'Ten of Cups': 'Satiety',
+  'Ace of Swords': 'Root of Air', 'Two of Swords': 'Peace',
+  'Three of Swords': 'Sorrow', 'Four of Swords': 'Truce',
+  'Five of Swords': 'Defeat', 'Six of Swords': 'Science',
+  'Seven of Swords': 'Futility', 'Eight of Swords': 'Interference',
+  'Nine of Swords': 'Cruelty', 'Ten of Swords': 'Ruin',
+  'Ace of Pentacles': 'Root of Earth', 'Two of Pentacles': 'Change',
+  'Three of Pentacles': 'Works', 'Four of Pentacles': 'Power',
+  'Five of Pentacles': 'Worry', 'Six of Pentacles': 'Success',
+  'Seven of Pentacles': 'Failure', 'Eight of Pentacles': 'Prudence',
+  'Nine of Pentacles': 'Gain', 'Ten of Pentacles': 'Wealth'
+};
+
+const MAJOR_ARCANA_PATHS = {
+  'The Fool':          { id: 11, from: 1, to: 2, letter: '\u05D0', letterName: 'Aleph', attribution: 'Air' },
+  'The Magician':      { id: 12, from: 1, to: 3, letter: '\u05D1', letterName: 'Beth', attribution: 'Mercury' },
+  'The High Priestess':{ id: 13, from: 1, to: 6, letter: '\u05D2', letterName: 'Gimel', attribution: 'The Moon' },
+  'The Empress':       { id: 14, from: 2, to: 3, letter: '\u05D3', letterName: 'Daleth', attribution: 'Venus' },
+  'The Emperor':       { id: 15, from: 2, to: 6, letter: '\u05D4', letterName: 'Heh', attribution: 'Aries' },
+  'The Hierophant':    { id: 16, from: 2, to: 4, letter: '\u05D5', letterName: 'Vav', attribution: 'Taurus' },
+  'The Lovers':        { id: 17, from: 3, to: 6, letter: '\u05D6', letterName: 'Zayin', attribution: 'Gemini' },
+  'The Chariot':       { id: 18, from: 3, to: 5, letter: '\u05D7', letterName: 'Cheth', attribution: 'Cancer' },
+  'Strength':          { id: 19, from: 4, to: 5, letter: '\u05D8', letterName: 'Teth', attribution: 'Leo' },
+  'The Hermit':        { id: 20, from: 4, to: 6, letter: '\u05D9', letterName: 'Yod', attribution: 'Virgo' },
+  'Wheel of Fortune':  { id: 21, from: 4, to: 7, letter: '\u05DB', letterName: 'Kaph', attribution: 'Jupiter' },
+  'Justice':           { id: 22, from: 5, to: 6, letter: '\u05DC', letterName: 'Lamed', attribution: 'Libra' },
+  'The Hanged Man':    { id: 23, from: 5, to: 8, letter: '\u05DE', letterName: 'Mem', attribution: 'Water' },
+  'Death':             { id: 24, from: 6, to: 7, letter: '\u05E0', letterName: 'Nun', attribution: 'Scorpio' },
+  'Temperance':        { id: 25, from: 6, to: 9, letter: '\u05E1', letterName: 'Samekh', attribution: 'Sagittarius' },
+  'The Devil':         { id: 26, from: 6, to: 8, letter: '\u05E2', letterName: 'Ayin', attribution: 'Capricorn' },
+  'The Tower':         { id: 27, from: 7, to: 8, letter: '\u05E4', letterName: 'Peh', attribution: 'Mars' },
+  'The Star':          { id: 28, from: 7, to: 9, letter: '\u05E6', letterName: 'Tzaddi', attribution: 'Aquarius' },
+  'The Moon':          { id: 29, from: 7, to: 10, letter: '\u05E7', letterName: 'Qoph', attribution: 'Pisces' },
+  'The Sun':           { id: 30, from: 8, to: 9, letter: '\u05E8', letterName: 'Resh', attribution: 'The Sun' },
+  'Judgement':         { id: 31, from: 8, to: 10, letter: '\u05E9', letterName: 'Shin', attribution: 'Fire / Spirit' },
+  'The World':         { id: 32, from: 9, to: 10, letter: '\u05EA', letterName: 'Tav', attribution: 'Saturn' }
+};
+
+function getCardCorrespondences(cardName) {
+  // Check Major Arcana
+  if (MAJOR_ARCANA_PATHS[cardName]) {
+    return { type: 'major', path: MAJOR_ARCANA_PATHS[cardName] };
+  }
+  // Check pip cards (Ace-10 of suit)
+  const match = cardName.match(/^(Ace|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten) of (Wands|Cups|Swords|Pentacles)$/);
+  if (!match) return null; // Court card
+  const numberWords = { 'Ace':1,'Two':2,'Three':3,'Four':4,'Five':5,'Six':6,'Seven':7,'Eight':8,'Nine':9,'Ten':10 };
+  const number = numberWords[match[1]];
+  const suit = match[2];
+  return {
+    type: 'pip',
+    number,
+    suit,
+    sephirah: SEPHIROTH_BY_NUMBER[number],
+    element: SUIT_CORRESPONDENCES[suit].element,
+    thothName: THOTH_NAMES[cardName]
+  };
+}
+
+// ─── Tree of Life (ported from ~/Code/kabbalah) ───
+const TOL_SVG_NS = 'http://www.w3.org/2000/svg';
+const TOL_R = 44, TOL_DR = 33;
+
+const TOL_POS = {
+  1:{x:400,y:65},2:{x:650,y:165},3:{x:150,y:165},
+  daath:{x:400,y:255},
+  4:{x:650,y:345},5:{x:150,y:345},6:{x:400,y:430},
+  7:{x:650,y:565},8:{x:150,y:565},9:{x:400,y:675},
+  10:{x:400,y:810}
+};
+
+const TOL_SEPHIROTH = [
+{id:1,name:'Kether',hebrew:'\u05DB\u05EA\u05E8',pronunciation:'KEH-ter',meaning:'Crown',
+ alsoKnown:null,pillar:'Middle \u2014 Equilibrium',world:'Atziluth (Emanation)',
+ godName:{heb:'\u05D0\u05D4\u05D9\u05D4',trans:'Eheieh',meaning:'I Am'},
+ archangel:{heb:'\u05DE\u05D8\u05D8\u05E8\u05D5\u05DF',name:'Metatron'},
+ angelicOrder:{heb:'\u05D7\u05D9\u05D5\u05EA \u05D4\u05E7\u05D3\u05E9',name:'Chayoth ha-Qadesh',meaning:'Holy Living Creatures'},
+ planet:'Primum Mobile',element:'\u2014',
+ magicalImage:'An ancient bearded king seen in profile',
+ colors:{king:'Brilliance',queen:'White brilliance',prince:'White brilliance',princess:'White flecked gold'},
+ body:'Crown of the head',virtue:'Attainment, completion of the Great Work',vice:'\u2014',
+ qliphoth:{name:'Thaumiel',heb:'\u05EA\u05D0\u05D5\u05DE\u05D9\u05D0\u05DC',meaning:'The Twin Gods / The Two-Headed Ones',
+  desc:'The dual contending forces, the division of that which is perfect. Two giant heads that war against each other, representing the utmost corruption of unity into duality.'},
+ desc:'The first emanation, the point where the infinite light of Ain Soph Aur first manifests. Kether is the divine will, the initial impulse of creation, the purest unity before duality. It is the source from which all other sephiroth flow \u2014 the still point at the crown of existence.',
+ color:'#ffffff',grad:['#ffffff','#d8d8e8'],textColor:'#222'},
+{id:2,name:'Chokmah',hebrew:'\u05D7\u05DB\u05DE\u05D4',pronunciation:'KHOK-mah',meaning:'Wisdom',
+ alsoKnown:null,pillar:'Right \u2014 Mercy',world:'Atziluth (Emanation)',
+ godName:{heb:'\u05D9\u05D4',trans:'Yah',meaning:'God'},
+ archangel:{heb:'\u05E8\u05D6\u05D9\u05D0\u05DC',name:'Raziel \u2014 Secret of God'},
+ angelicOrder:{heb:'\u05D0\u05D5\u05E4\u05E0\u05D9\u05DD',name:'Auphanim',meaning:'Wheels'},
+ planet:'The Zodiac / Uranus',element:'\u2014',
+ magicalImage:'A bearded male figure',
+ colors:{king:'Pure soft blue',queen:'Grey',prince:'Pearl grey iridescent',princess:'White flecked red, blue, yellow'},
+ body:'Left side of the face',virtue:'Devotion',vice:'\u2014',
+ qliphoth:{name:'Ghagiel',heb:'\u05E2\u05D5\u05D2\u05D9\u05D0\u05DC',meaning:'The Hinderers',
+  desc:'Those who hinder the flow of divine wisdom. They represent the obstruction of creative energy and the corruption of the first masculine force.'},
+ desc:'The second emanation, the great Father (Abba), the first masculine force. Chokmah is pure dynamic energy \u2014 not accumulated knowledge, but the flash of insight, the lightning strike of illumination. It is wisdom as the seed of all potential.',
+ color:'#9898b0',grad:['#c0c0d0','#7878a0'],textColor:'#1a1a2e'},
+{id:3,name:'Binah',hebrew:'\u05D1\u05D9\u05E0\u05D4',pronunciation:'BEE-nah',meaning:'Understanding',
+ alsoKnown:null,pillar:'Left \u2014 Severity',world:'Atziluth (Emanation)',
+ godName:{heb:'\u05D9\u05D4\u05D5\u05D4 \u05D0\u05DC\u05D4\u05D9\u05DD',trans:'YHVH Elohim',meaning:'Lord God'},
+ archangel:{heb:'\u05E6\u05E4\u05E7\u05D9\u05D0\u05DC',name:'Tzaphkiel \u2014 Beholder of God'},
+ angelicOrder:{heb:'\u05D0\u05E8\u05D0\u05DC\u05D9\u05DD',name:'Aralim',meaning:'Thrones'},
+ planet:'Saturn',element:'\u2014',
+ magicalImage:'A mature woman, a matron',
+ colors:{king:'Crimson',queen:'Black',prince:'Dark brown',princess:'Grey flecked pink'},
+ body:'Right side of the face',virtue:'Silence',vice:'Avarice',
+ qliphoth:{name:'Satariel',heb:'\u05E1\u05EA\u05E8\u05D9\u05D0\u05DC',meaning:'The Concealers',
+  desc:'Those who hide the face of mercy. They cloak divine understanding in darkness and confusion, representing the corruption of form into stifling restriction.'},
+ desc:'The great Mother (Aima), the feminine principle that gives form to the force of Chokmah. Binah is structured comprehension \u2014 understanding that shapes raw wisdom into intelligible patterns. At the head of the Pillar of Severity, she imposes the first necessary limitations on infinite potential.',
+ color:'#1a1a30',grad:['#3a3a5a','#0e0e20'],textColor:'#ccc',stroke:'#666'},
+{id:4,name:'Chesed',hebrew:'\u05D7\u05E1\u05D3',pronunciation:'KHEH-sed',meaning:'Mercy, Loving-kindness',
+ alsoKnown:'Gedulah (\u05D2\u05D3\u05D5\u05DC\u05D4) \u2014 Greatness',pillar:'Right \u2014 Mercy',world:'Briah (Creation)',
+ godName:{heb:'\u05D0\u05DC',trans:'El',meaning:'God'},
+ archangel:{heb:'\u05E6\u05D3\u05E7\u05D9\u05D0\u05DC',name:'Tzadkiel \u2014 Righteousness of God'},
+ angelicOrder:{heb:'\u05D7\u05E9\u05DE\u05DC\u05D9\u05DD',name:'Chasmalim',meaning:'Brilliant Ones'},
+ planet:'Jupiter',element:'Water',
+ magicalImage:'A mighty crowned and throned king',
+ colors:{king:'Deep violet',queen:'Blue',prince:'Deep purple',princess:'Deep azure flecked yellow'},
+ body:'Left arm',virtue:'Obedience',vice:'Bigotry, hypocrisy, tyranny',
+ qliphoth:{name:'Gamchicoth',heb:'\u05D2\u05DE\u05D7\u05D9\u05DB\u05D5\u05EA',meaning:'The Devourers',
+  desc:'Those who consume without giving. They devour all abundance and benevolence, transforming the generosity of Chesed into insatiable greed.'},
+ desc:'The first sephirah below the Abyss, Chesed is the organizing principle of mercy, abundance, and benevolent authority. It is the archetype of the loving king who provides structure through compassion \u2014 the great builder who shapes the raw creative forces into coherent, constructive patterns.',
+ color:'#2255bb',grad:['#4488dd','#1a3388'],textColor:'#e8e8ff'},
+{id:5,name:'Geburah',hebrew:'\u05D2\u05D1\u05D5\u05E8\u05D4',pronunciation:'geh-BOO-rah',meaning:'Severity, Strength',
+ alsoKnown:'Din (\u05D3\u05D9\u05DF) \u2014 Judgment; Pachad (\u05E4\u05D7\u05D3) \u2014 Fear',pillar:'Left \u2014 Severity',world:'Briah (Creation)',
+ godName:{heb:'\u05D0\u05DC\u05D4\u05D9\u05DD \u05D2\u05D1\u05D5\u05E8',trans:'Elohim Gibor',meaning:'God of Battles'},
+ archangel:{heb:'\u05DB\u05DE\u05D0\u05DC',name:'Khamael \u2014 Burner of God'},
+ angelicOrder:{heb:'\u05E9\u05E8\u05E4\u05D9\u05DD',name:'Seraphim',meaning:'Fiery Serpents'},
+ planet:'Mars',element:'Fire',
+ magicalImage:'A mighty warrior in his chariot',
+ colors:{king:'Orange',queen:'Scarlet red',prince:'Bright scarlet',princess:'Red flecked black'},
+ body:'Right arm',virtue:'Energy, courage',vice:'Cruelty, destruction',
+ qliphoth:{name:'Golachab',heb:'\u05D2\u05D5\u05DC\u05D7\u05D1',meaning:'The Burners / Arsonists',
+  desc:'Those who burn with consuming fire. They are the corruption of divine severity into wanton destruction and cruelty without purpose or justice.'},
+ desc:'The great warrior and judge, Geburah is the necessary force of discipline and destruction. It is the surgeon\'s knife that cuts away what is harmful. Without Geburah, the unchecked mercy of Chesed would overflow into formless excess. It provides the strength to enforce boundaries and the courage to destroy what must be destroyed for growth to occur.',
+ color:'#cc2222',grad:['#ee4444','#991111'],textColor:'#fff'},
+{id:6,name:'Tiphareth',hebrew:'\u05EA\u05E4\u05D0\u05E8\u05EA',pronunciation:'tif-EH-ret',meaning:'Beauty, Harmony',
+ alsoKnown:null,pillar:'Middle \u2014 Equilibrium',world:'Briah (Creation)',
+ godName:{heb:'\u05D9\u05D4\u05D5\u05D4 \u05D0\u05DC\u05D5\u05D4 \u05D5\u05D3\u05E2\u05EA',trans:'YHVH Eloah va-Daath',meaning:'God of Knowledge'},
+ archangel:{heb:'\u05E8\u05E4\u05D0\u05DC',name:'Raphael \u2014 Healer of God'},
+ angelicOrder:{heb:'\u05DE\u05DC\u05D0\u05DB\u05D9\u05DD',name:'Malakim',meaning:'Kings / Messengers'},
+ planet:'The Sun',element:'Air',
+ magicalImage:'A majestic king, a child, a sacrificed god',
+ colors:{king:'Clear pink rose',queen:'Yellow / Golden',prince:'Rich salmon',princess:'Gold amber'},
+ body:'Breast, heart',virtue:'Devotion to the Great Work',vice:'False pride',
+ qliphoth:{name:'Thagirion',heb:'\u05EA\u05D2\u05E8\u05D9\u05E8\u05D9\u05D5\u05DF',meaning:'The Disputers / The Litigation',
+  desc:'Those who litigate and dispute endlessly. They corrupt the harmony of beauty into vanity and conflict, replacing genuine radiance with hollow appearances.'},
+ desc:'The central sephirah of the entire Tree, Tiphareth is the harmonizing principle that balances all opposing forces. It is the seat of the Higher Self \u2014 the Christ or Buddha consciousness \u2014 the point where divine and human meet. As the Sun at the center of the solar system, Tiphareth radiates balance, beauty, and sacrificial love in all directions.',
+ color:'#d4a017',grad:['#ffe066','#bb8800'],textColor:'#2a2000'},
+{id:7,name:'Netzach',hebrew:'\u05E0\u05E6\u05D7',pronunciation:'NET-zakh',meaning:'Victory, Eternity',
+ alsoKnown:null,pillar:'Right \u2014 Mercy',world:'Yetzirah (Formation)',
+ godName:{heb:'\u05D9\u05D4\u05D5\u05D4 \u05E6\u05D1\u05D0\u05D5\u05EA',trans:'YHVH Tzabaoth',meaning:'Lord of Hosts'},
+ archangel:{heb:'\u05D4\u05E0\u05D9\u05D0\u05DC',name:'Haniel \u2014 Grace of God'},
+ angelicOrder:{heb:'\u05D0\u05DC\u05D4\u05D9\u05DD',name:'Elohim',meaning:'Gods'},
+ planet:'Venus',element:'Fire',
+ magicalImage:'A beautiful naked woman',
+ colors:{king:'Amber',queen:'Emerald',prince:'Bright yellow-green',princess:'Olive flecked gold'},
+ body:'Left hip and leg',virtue:'Unselfishness',vice:'Unchastity, lust',
+ qliphoth:{name:'Harab Serapel',heb:'\u05D4\u05E8\u05D1 \u05E1\u05E8\u05D0\u05E4\u05DC',meaning:'The Ravens of Dispersion',
+  desc:'The ravens that scatter and devour. They corrupt desire and passion into addiction and obsession, dispersing creative energy into fruitless pursuits.'},
+ desc:'The sphere of creative emotions, desire, passion, and the artistic impulse. Netzach governs the instinctive, feeling nature \u2014 love, attraction, beauty in its sensory form. It is the driving force of nature expressed through feeling and imagination, the passionate will that sustains the power to create and to love.',
+ color:'#228b22',grad:['#44cc66','#1a6b2d'],textColor:'#e8ffe8'},
+{id:8,name:'Hod',hebrew:'\u05D4\u05D5\u05D3',pronunciation:'HOHD',meaning:'Splendor, Glory',
+ alsoKnown:null,pillar:'Left \u2014 Severity',world:'Yetzirah (Formation)',
+ godName:{heb:'\u05D0\u05DC\u05D4\u05D9\u05DD \u05E6\u05D1\u05D0\u05D5\u05EA',trans:'Elohim Tzabaoth',meaning:'God of Hosts'},
+ archangel:{heb:'\u05DE\u05D9\u05DB\u05D0\u05DC',name:'Michael \u2014 Who is like God'},
+ angelicOrder:{heb:'\u05D1\u05E0\u05D9 \u05D0\u05DC\u05D4\u05D9\u05DD',name:'Beni Elohim',meaning:'Sons of God'},
+ planet:'Mercury',element:'Water',
+ magicalImage:'A hermaphrodite',
+ colors:{king:'Violet-purple',queen:'Orange',prince:'Russet-red',princess:'Yellowish brown flecked white'},
+ body:'Right hip and leg',virtue:'Truthfulness',vice:'Falsehood, dishonesty',
+ qliphoth:{name:'Samael',heb:'\u05E1\u05DE\u05D0\u05DC',meaning:'The Poison of God',
+  desc:'The desolation and poison that corrupts the mind. Samael represents the perversion of intellect into deception, manipulation, and the use of knowledge as a weapon.'},
+ desc:'The sphere of intellect, communication, language, and magic as a disciplined art. Where Netzach creates through feeling, Hod creates through thought and structure. It governs logic, science, ritual, and all forms of precise communication. Mercury, its planet, rules the transmission of ideas and the systems we build to represent reality.',
+ color:'#e07020',grad:['#ffaa44','#cc5500'],textColor:'#2a1500'},
+{id:9,name:'Yesod',hebrew:'\u05D9\u05E1\u05D5\u05D3',pronunciation:'yeh-SOHD',meaning:'Foundation',
+ alsoKnown:null,pillar:'Middle \u2014 Equilibrium',world:'Yetzirah (Formation)',
+ godName:{heb:'\u05E9\u05D3\u05D9 \u05D0\u05DC \u05D7\u05D9',trans:'Shaddai El Chai',meaning:'Almighty Living God'},
+ archangel:{heb:'\u05D2\u05D1\u05E8\u05D9\u05D0\u05DC',name:'Gabriel \u2014 Strength of God'},
+ angelicOrder:{heb:'\u05DB\u05E8\u05D5\u05D1\u05D9\u05DD',name:'Kerubim',meaning:'The Strong Ones / Cherubim'},
+ planet:'The Moon',element:'Air',
+ magicalImage:'A beautiful naked man, very strong',
+ colors:{king:'Indigo',queen:'Violet',prince:'Very dark purple',princess:'Citrine flecked azure'},
+ body:'Reproductive organs',virtue:'Independence',vice:'Idleness',
+ qliphoth:{name:'Gamaliel',heb:'\u05D2\u05DE\u05DC\u05D9\u05D0\u05DC',meaning:'The Obscene Ones',
+  desc:'Those who corrupt the pure astral light into distorted fantasies and nightmares. They represent the perversion of the generative force and the pollution of the dream realm.'},
+ desc:'The astral foundation upon which the physical world rests. Yesod is the reservoir of images and vital energies \u2014 the collective unconscious, dreams, and the astral plane. As the Moon reflects the Sun, Yesod reflects the energies of all sephiroth above it and transmits them to Malkuth. It is the gateway between the subtle and the physical.',
+ color:'#7b2fbe',grad:['#aa55dd','#5a1a99'],textColor:'#f0e0ff'},
+{id:10,name:'Malkuth',hebrew:'\u05DE\u05DC\u05DB\u05D5\u05EA',pronunciation:'mal-KHOOT',meaning:'Kingdom',
+ alsoKnown:'Kallah (\u05DB\u05DC\u05D4) \u2014 The Bride',pillar:'Middle \u2014 Equilibrium',world:'Assiah (Action)',
+ godName:{heb:'\u05D0\u05D3\u05E0\u05D9 \u05D4\u05D0\u05E8\u05E5',trans:'Adonai ha-Aretz',meaning:'Lord of Earth'},
+ archangel:{heb:'\u05E1\u05E0\u05D3\u05DC\u05E4\u05D5\u05DF',name:'Sandalphon'},
+ angelicOrder:{heb:'\u05D0\u05E9\u05D9\u05DD',name:'Ashim',meaning:'Souls of Fire'},
+ planet:'Earth',element:'Earth',
+ magicalImage:'A young woman, crowned and throned',
+ colors:{king:'Yellow',queen:'Citrine, olive, russet, black',prince:'Citrine, olive, russet, black flecked gold',princess:'Black rayed yellow'},
+ body:'Feet, the whole physical body',virtue:'Discrimination',vice:'Avarice, inertia',
+ qliphoth:{name:'Lilith',heb:'\u05DC\u05D9\u05DC\u05D9\u05EA',meaning:'Queen of the Night',
+  desc:'The dark queen who rules the material world in its most corrupted form. Lilith represents the complete inversion of the sacred into the profane \u2014 matter divorced from spirit, the body without the soul.'},
+ desc:'The final sephirah, where all divine energies manifest in the physical world. Malkuth is the Kingdom \u2014 material reality, the body, the earth. It is both the end point of the lightning flash of creation and the beginning of the mystic\'s return journey upward. Known as the Bride (Kallah), she awaits reunion with Tiphareth, the King.',
+ color:'quartered',quarters:['#c5b358','#6b8e23','#804020','#1c1c30'],textColor:'#fff'}
+];
+
+const TOL_PATHS = [
+{id:11,from:1,to:2,letter:'\u05D0',letterName:'Aleph',letterMeaning:'Ox',tarot:'0 \u2014 The Fool',attribution:'Air (Element)',desc:'The path of pure spirit, the breath of life descending from Crown to Wisdom. The Fool represents the divine madness of spirit leaping into manifestation \u2014 zero containing all potential, the void before creation takes form.'},
+{id:12,from:1,to:3,letter:'\u05D1',letterName:'Beth',letterMeaning:'House',tarot:'I \u2014 The Magician',attribution:'Mercury',desc:'The path of the cosmic messenger channeling the unity of Kether into the structured understanding of Binah. Mercury carries the divine will downward, giving it the first container \u2014 the House in which spirit may dwell.'},
+{id:13,from:1,to:6,letter:'\u05D2',letterName:'Gimel',letterMeaning:'Camel',tarot:'II \u2014 The High Priestess',attribution:'The Moon',desc:'The longest vertical path, crossing the Abyss. The camel carries the traveler across the desert void. The High Priestess guards this crossing, representing the intuitive, receptive faculty needed to traverse the gulf between the divine and the human self.'},
+{id:14,from:2,to:3,letter:'\u05D3',letterName:'Daleth',letterMeaning:'Door',tarot:'III \u2014 The Empress',attribution:'Venus',desc:'The path connecting the Supernal Father and Mother. The Door opens between active Wisdom and receptive Understanding, and the Empress embodies the fertile union of these cosmic polarities \u2014 the doorway through which all creation flows.'},
+{id:15,from:2,to:6,letter:'\u05D4',letterName:'Heh',letterMeaning:'Window',tarot:'IV \u2014 The Emperor',attribution:'Aries',desc:'The Window through which the light of the Supernal Father shines down to the Son in Tiphareth. The Emperor represents the stabilizing, ordering power of cosmic authority, establishing the structures through which wisdom manifests as beauty.'},
+{id:16,from:2,to:4,letter:'\u05D5',letterName:'Vav',letterMeaning:'Nail / Hook',tarot:'V \u2014 The Hierophant',attribution:'Taurus',desc:'The nail that fixes spiritual vision into benevolent order. The Hierophant is the inner teacher who transmits sacred knowledge through tradition and ceremony, anchoring heavenly wisdom into institutional form.'},
+{id:17,from:3,to:6,letter:'\u05D6',letterName:'Zayin',letterMeaning:'Sword',tarot:'VI \u2014 The Lovers',attribution:'Gemini',desc:'The Sword that cuts through duality. The Lovers represent sacred union and the power of choice \u2014 the discernment of Understanding reflected into the harmony of Beauty. This path demands choosing between the higher and lower natures.'},
+{id:18,from:3,to:5,letter:'\u05D7',letterName:'Cheth',letterMeaning:'Fence / Enclosure',tarot:'VII \u2014 The Chariot',attribution:'Cancer',desc:'The path of triumphant will, enclosed and protected. The Chariot carries the warrior from the cosmic womb of Binah into the martial strength of Geburah. The fence provides protection for the soul\'s journey through the waters of form.'},
+{id:19,from:4,to:5,letter:'\u05D8',letterName:'Teth',letterMeaning:'Serpent',tarot:'VIII \u2014 Strength',attribution:'Leo',desc:'The Serpent of kundalini power coiling between Mercy and Severity. Strength represents the taming of the beast nature \u2014 not through force but through love. This horizontal path balances the expansive grace of Chesed with the contracting discipline of Geburah.'},
+{id:20,from:4,to:6,letter:'\u05D9',letterName:'Yod',letterMeaning:'Hand / Open hand',tarot:'IX \u2014 The Hermit',attribution:'Virgo',desc:'The open hand of divine guidance. The Hermit carries the lantern of inner light from the generous abundance of Chesed to the beautiful balance of Tiphareth \u2014 the path of solitary illumination, the hand of the divine reaching toward humanity.'},
+{id:21,from:4,to:7,letter:'\u05DB',letterName:'Kaph',letterMeaning:'Palm of hand',tarot:'X \u2014 Wheel of Fortune',attribution:'Jupiter',desc:'The grasping palm of fortune and fate. The Wheel spins between the benevolent expansion of Jupiter and the passionate desire of Venus, a reminder that all material and emotional states are cyclical and impermanent.'},
+{id:22,from:5,to:6,letter:'\u05DC',letterName:'Lamed',letterMeaning:'Ox-goad',tarot:'XI \u2014 Justice',attribution:'Libra',desc:'The ox-goad that drives toward balance. Justice stands between Severity and Beauty, wielding sword and scales. True beauty arises only through perfect equilibrium \u2014 the strict adjustment of all forces to their proper measure.'},
+{id:23,from:5,to:8,letter:'\u05DE',letterName:'Mem',letterMeaning:'Water',tarot:'XII \u2014 The Hanged Man',attribution:'Water (Element)',desc:'The waters of sacrifice and reversal. The Hanged Man suspends himself voluntarily, seeing the world from a transcendent perspective. From fiery severity to mercurial intellect, this path demands surrender of the ordinary viewpoint.'},
+{id:24,from:6,to:7,letter:'\u05E0',letterName:'Nun',letterMeaning:'Fish',tarot:'XIII \u2014 Death',attribution:'Scorpio',desc:'The fish swimming through the waters of transformation. Death on this path is not destruction but metamorphosis \u2014 the beauty of Tiphareth dissolving into the passionate creative forces of Netzach. The old form dies so the new may be born.'},
+{id:25,from:6,to:9,letter:'\u05E1',letterName:'Samekh',letterMeaning:'Prop / Support',tarot:'XIV \u2014 Temperance',attribution:'Sagittarius',desc:'The central pillar path connecting the Higher Self to its astral reflection. Temperance pours the waters of consciousness between the golden sun of Tiphareth and the silver moon of Yesod \u2014 the alchemical art of blending the spiritual and the psychic.'},
+{id:26,from:6,to:8,letter:'\u05E2',letterName:'Ayin',letterMeaning:'Eye',tarot:'XV \u2014 The Devil',attribution:'Capricorn',desc:'The Eye that sees through illusion \u2014 or is trapped by it. The Devil represents bondage to materiality, the chains binding the Higher Self to the lower intellect. This path challenges us to confront our attachments and see that the chains are self-imposed.'},
+{id:27,from:7,to:8,letter:'\u05E4',letterName:'Peh',letterMeaning:'Mouth',tarot:'XVI \u2014 The Tower',attribution:'Mars',desc:'The Mouth that speaks the word of destruction and renewal. The Tower is struck by lightning, shattering false structures. Between feeling and thinking, this horizontal path represents the explosive force that destroys illusion and clears the way for truth.'},
+{id:28,from:7,to:9,letter:'\u05E6',letterName:'Tzaddi',letterMeaning:'Fish-hook',tarot:'XVII \u2014 The Star',attribution:'Aquarius',desc:'The fish-hook drawing up what lies beneath the surface. The Star pours living water from Netzach\'s creative passion into Yesod\'s astral pool \u2014 hope, inspiration, and the promise of renewal after the Tower\'s destruction.'},
+{id:29,from:7,to:10,letter:'\u05E7',letterName:'Qoph',letterMeaning:'Back of head',tarot:'XVIII \u2014 The Moon',attribution:'Pisces',desc:'The back of the head \u2014 the unconscious mind, instinct, and dream. The Moon illuminates the treacherous path between the emotional realm and physical manifestation, where the traveler must navigate between the pillars of light and dark.'},
+{id:30,from:8,to:9,letter:'\u05E8',letterName:'Resh',letterMeaning:'Head / Face',tarot:'XIX \u2014 The Sun',attribution:'The Sun',desc:'The radiant face of solar consciousness. The Sun shines between the intellectual structures of Hod and the astral mirror of Yesod, bringing clarity, joy, and illumination \u2014 the conscious mind at its clearest, held high in the light of reason.'},
+{id:31,from:8,to:10,letter:'\u05E9',letterName:'Shin',letterMeaning:'Tooth',tarot:'XX \u2014 Judgement',attribution:'Fire (Element) / Spirit',desc:'The Tooth that consumes and purifies. Judgement calls the dead to rise \u2014 the transformative fire burning between the intellectual world and the physical kingdom. Shin, with its three flames, represents the threefold fire of spirit descending into matter to awaken and redeem it.'},
+{id:32,from:9,to:10,letter:'\u05EA',letterName:'Tav',letterMeaning:'Cross / Mark',tarot:'XXI \u2014 The World',attribution:'Saturn / Earth',desc:'The final path, the Cross that completes creation. The World dancer moves within the wreath of manifestation \u2014 the universe whole, complete, and self-sustaining. This path marks the final step of spirit into matter, and the first step of the return journey.'}
+];
+
+const TOL_DAATH = {
+  name:'Da\u2019ath',hebrew:'\u05D3\u05E2\u05EA',pronunciation:'DAH-at',meaning:'Knowledge',
+  desc:'Da\u2019ath is not a sephirah but a conjunction point \u2014 the invisible gateway across the Abyss that separates the Supernal Triad from the seven lower sephiroth. It represents gnosis: direct experiential knowledge of the divine, as opposed to intellectual understanding. To cross the Abyss through Da\u2019ath is to annihilate the ego and all personal identity, dissolving into the unity beyond form. It is the paradox of knowing that which cannot be known \u2014 the place where all dualities collapse and the mind confronts the infinite.',
+  color:'rgba(120,120,200,0.25)'
+};
+
+function tolEl(tag, attrs) {
+  const e = document.createElementNS(TOL_SVG_NS, tag);
+  if (attrs) Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v));
+  return e;
+}
+
+function buildTreeOfLife(prefix) {
+  prefix = prefix || 'tol';
+  const svg = tolEl('svg', {viewBox: '0 0 800 900', width: '800', height: '900'});
+  const defs = tolEl('defs');
+
+  // Glow filters (prefixed to avoid collision)
+  const glow = tolEl('filter', {id: prefix + '-glow', x: '-50%', y: '-50%', width: '200%', height: '200%'});
+  const gb = tolEl('feGaussianBlur', {stdDeviation: '4', result: 'g'});
+  const gm = tolEl('feMerge');
+  gm.appendChild(tolEl('feMergeNode', {in: 'g'}));
+  gm.appendChild(tolEl('feMergeNode', {in: 'SourceGraphic'}));
+  glow.appendChild(gb); glow.appendChild(gm); defs.appendChild(glow);
+
+  const glowS = tolEl('filter', {id: prefix + '-glow-strong', x: '-50%', y: '-50%', width: '200%', height: '200%'});
+  const gsb = tolEl('feGaussianBlur', {stdDeviation: '8', result: 'g'});
+  const gsm = tolEl('feMerge');
+  gsm.appendChild(tolEl('feMergeNode', {in: 'g'}));
+  gsm.appendChild(tolEl('feMergeNode', {in: 'SourceGraphic'}));
+  glowS.appendChild(gsb); glowS.appendChild(gsm); defs.appendChild(glowS);
+
+  // Radial gradients
+  TOL_SEPHIROTH.forEach(s => {
+    if (s.color === 'quartered') return;
+    const rg = tolEl('radialGradient', {id: prefix + '-grad-' + s.id, cx: '38%', cy: '33%', r: '65%'});
+    rg.appendChild(tolEl('stop', {offset: '0%', 'stop-color': s.grad[0]}));
+    rg.appendChild(tolEl('stop', {offset: '100%', 'stop-color': s.grad[1]}));
+    defs.appendChild(rg);
+  });
+  svg.appendChild(defs);
+
+  // Background
+  svg.appendChild(tolEl('rect', {x: '0', y: '0', width: '800', height: '900', fill: 'transparent'}));
+
+  // Pillar bands
+  [{x:150,label:'Severity'},{x:400,label:'Equilibrium'},{x:650,label:'Mercy'}].forEach(p => {
+    svg.appendChild(tolEl('line', {x1: String(p.x), y1: '25', x2: String(p.x), y2: '875',
+      stroke: 'rgba(201,168,76,0.06)', 'stroke-width': '80', 'stroke-linecap': 'round'}));
+    const t = tolEl('text', {x: String(p.x), y: '892', class: 'pillar-label'});
+    t.textContent = p.label;
+    svg.appendChild(t);
+  });
+
+  // Draw paths
+  const pathGroups = {};
+  TOL_PATHS.forEach(p => {
+    const f = TOL_POS[p.from], t = TOL_POS[p.to];
+    const g = tolEl('g', {class: 'path-group', 'data-path': String(p.id)});
+    g.appendChild(tolEl('line', {x1: String(f.x), y1: String(f.y), x2: String(t.x), y2: String(t.y), class: 'path-hit'}));
+    g.appendChild(tolEl('line', {x1: String(f.x), y1: String(f.y), x2: String(t.x), y2: String(t.y), class: 'path-line'}));
+
+    // Hebrew letter at midpoint
+    const mx = (f.x + t.x) / 2, my = (f.y + t.y) / 2;
+    let ox = 0, oy = 0;
+    const dx = t.x - f.x, dy = t.y - f.y;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    if (len > 0) { ox = (-dy / len) * 18; oy = (dx / len) * 18; }
+    if (Math.abs(dy) < 5) { ox = 0; oy = -20; }
+    if (Math.abs(dx) < 5) { ox = 22; oy = 0; }
+
+    const lt = tolEl('text', {x: String(mx + ox), y: String(my + oy), class: 'path-letter', 'dominant-baseline': 'central'});
+    lt.textContent = p.letter;
+    g.appendChild(lt);
+    svg.appendChild(g);
+    pathGroups[p.id] = g;
+  });
+
+  // Draw Da'ath
+  const daathGroup = tolEl('g', {class: 'daath-group'});
+  daathGroup.appendChild(tolEl('circle', {cx: String(TOL_POS.daath.x), cy: String(TOL_POS.daath.y), r: String(TOL_DR), class: 'daath-circle'}));
+  const dt1 = tolEl('text', {x: String(TOL_POS.daath.x), y: String(TOL_POS.daath.y - TOL_DR - 10), class: 'seph-hebrew', style: 'opacity:0.5'});
+  dt1.textContent = '\u05D3\u05E2\u05EA';
+  daathGroup.appendChild(dt1);
+  const dt2 = tolEl('text', {x: String(TOL_POS.daath.x), y: String(TOL_POS.daath.y + TOL_DR + 18), class: 'seph-english', style: 'opacity:0.4'});
+  dt2.textContent = 'Da\u2019ath';
+  daathGroup.appendChild(dt2);
+  svg.appendChild(daathGroup);
+
+  // Draw sephiroth
+  const sephGroups = {};
+  TOL_SEPHIROTH.forEach(s => {
+    const p = TOL_POS[s.id];
+    const g = tolEl('g', {class: 'seph-group', 'data-seph': String(s.id),
+      transform: `translate(${p.x},${p.y})`});
+
+    if (s.color === 'quartered') {
+      const qg = tolEl('g');
+      const q = s.quarters;
+      [{d:`M0,0 L0,${-TOL_R} A${TOL_R},${TOL_R} 0 0,0 ${-TOL_R},0 Z`,fill:q[0]},
+       {d:`M0,0 L0,${-TOL_R} A${TOL_R},${TOL_R} 0 0,1 ${TOL_R},0 Z`,fill:q[1]},
+       {d:`M0,0 L${-TOL_R},0 A${TOL_R},${TOL_R} 0 0,0 0,${TOL_R} Z`,fill:q[2]},
+       {d:`M0,0 L${TOL_R},0 A${TOL_R},${TOL_R} 0 0,1 0,${TOL_R} Z`,fill:q[3]}
+      ].forEach(qp => qg.appendChild(tolEl('path', {d: qp.d, fill: qp.fill})));
+      g.appendChild(qg);
+      g.appendChild(tolEl('circle', {r: String(TOL_R), fill: 'none', stroke: 'rgba(201,168,76,0.5)',
+        'stroke-width': '1.5', class: 'seph-circle'}));
+    } else {
+      g.appendChild(tolEl('circle', {r: String(TOL_R), fill: `url(#${prefix}-grad-${s.id})`,
+        stroke: s.stroke || 'rgba(201,168,76,0.3)', 'stroke-width': '1.2', class: 'seph-circle'}));
+    }
+
+    const nt = tolEl('text', {x: '0', y: '1', class: 'seph-num', fill: s.textColor,
+      'text-anchor': 'middle', 'dominant-baseline': 'central'});
+    nt.textContent = String(s.id);
+    g.appendChild(nt);
+
+    const ht = tolEl('text', {x: '0', y: String(-TOL_R - 12), class: 'seph-hebrew'});
+    ht.textContent = s.hebrew;
+    g.appendChild(ht);
+
+    const et = tolEl('text', {x: '0', y: String(TOL_R + 20), class: 'seph-english'});
+    et.textContent = s.name;
+    g.appendChild(et);
+
+    svg.appendChild(g);
+    sephGroups[s.id] = g;
+  });
+
+  return {svg, sephGroups, pathGroups, daathGroup};
+}
+
+function highlightTreeSephirah(sephId) {
+  if (!tolTree) return;
+  const {sephGroups, pathGroups, daathGroup} = tolTree;
+  Object.values(sephGroups).forEach(g => { g.classList.remove('dimmed','highlighted','selected-seph'); });
+  Object.values(pathGroups).forEach(g => { g.classList.remove('dimmed','highlighted','selected-path'); });
+  daathGroup.classList.remove('dimmed');
+
+  const connectedPaths = TOL_PATHS.filter(p => p.from === sephId || p.to === sephId);
+  const connectedSephIds = new Set();
+  connectedPaths.forEach(p => { connectedSephIds.add(p.from); connectedSephIds.add(p.to); });
+
+  Object.entries(sephGroups).forEach(([id, g]) => {
+    const nid = Number(id);
+    if (nid === sephId) g.classList.add('selected-seph');
+    else if (connectedSephIds.has(nid)) g.classList.add('highlighted');
+    else g.classList.add('dimmed');
+  });
+  Object.entries(pathGroups).forEach(([id, g]) => {
+    const pid = Number(id);
+    const pd = TOL_PATHS.find(p => p.id === pid);
+    if (pd && (pd.from === sephId || pd.to === sephId)) g.classList.add('highlighted');
+    else g.classList.add('dimmed');
+  });
+  daathGroup.classList.add('dimmed');
+}
+
+function highlightTreePath(pathId) {
+  if (!tolTree) return;
+  const {sephGroups, pathGroups, daathGroup} = tolTree;
+  Object.values(sephGroups).forEach(g => { g.classList.remove('dimmed','highlighted','selected-seph'); });
+  Object.values(pathGroups).forEach(g => { g.classList.remove('dimmed','highlighted','selected-path'); });
+  daathGroup.classList.remove('dimmed');
+
+  const pd = TOL_PATHS.find(p => p.id === pathId);
+  Object.entries(sephGroups).forEach(([id, g]) => {
+    const nid = Number(id);
+    if (pd && (nid === pd.from || nid === pd.to)) g.classList.add('highlighted');
+    else g.classList.add('dimmed');
+  });
+  Object.entries(pathGroups).forEach(([id, g]) => {
+    if (Number(id) === pathId) g.classList.add('selected-path');
+    else g.classList.add('dimmed');
+  });
+  daathGroup.classList.add('dimmed');
+}
+
+function clearTreeHighlight() {
+  if (!tolTree) return;
+  const {sephGroups, pathGroups, daathGroup} = tolTree;
+  Object.values(sephGroups).forEach(g => { g.classList.remove('dimmed','highlighted','selected-seph'); });
+  Object.values(pathGroups).forEach(g => { g.classList.remove('dimmed','highlighted','selected-path'); });
+  daathGroup.classList.remove('dimmed');
+}
+
+// ─── Tree of Life Modal ───
+let tolModalTree = null;
+let tolModalState = {type: null, id: null};
+
+function applyTreeHighlight(tree, type, id) {
+  if (!tree) return;
+  const {sephGroups, pathGroups, daathGroup} = tree;
+  Object.values(sephGroups).forEach(g => { g.classList.remove('dimmed','highlighted','selected-seph'); });
+  Object.values(pathGroups).forEach(g => { g.classList.remove('dimmed','highlighted','selected-path'); });
+  daathGroup.classList.remove('dimmed');
+
+  if (!type) return;
+
+  if (type === 'sephirah') {
+    const connectedPaths = TOL_PATHS.filter(p => p.from === id || p.to === id);
+    const connectedSephIds = new Set();
+    connectedPaths.forEach(p => { connectedSephIds.add(p.from); connectedSephIds.add(p.to); });
+    Object.entries(sephGroups).forEach(([sid, g]) => {
+      const nid = Number(sid);
+      if (nid === id) g.classList.add('selected-seph');
+      else if (connectedSephIds.has(nid)) g.classList.add('highlighted');
+      else g.classList.add('dimmed');
+    });
+    Object.entries(pathGroups).forEach(([pid, g]) => {
+      const pd = TOL_PATHS.find(p => p.id === Number(pid));
+      if (pd && (pd.from === id || pd.to === id)) g.classList.add('highlighted');
+      else g.classList.add('dimmed');
+    });
+    daathGroup.classList.add('dimmed');
+  } else if (type === 'path') {
+    const pd = TOL_PATHS.find(p => p.id === id);
+    Object.entries(sephGroups).forEach(([sid, g]) => {
+      const nid = Number(sid);
+      if (pd && (nid === pd.from || nid === pd.to)) g.classList.add('highlighted');
+      else g.classList.add('dimmed');
+    });
+    Object.entries(pathGroups).forEach(([pid, g]) => {
+      if (Number(pid) === id) g.classList.add('selected-path');
+      else g.classList.add('dimmed');
+    });
+    daathGroup.classList.add('dimmed');
+  } else if (type === 'daath') {
+    Object.values(sephGroups).forEach(g => g.classList.add('dimmed'));
+    Object.values(pathGroups).forEach(g => g.classList.add('dimmed'));
+    daathGroup.classList.remove('dimmed');
+  }
+}
+
+function tolPanelRow(label, value) {
+  return `<div class="tp-row"><span class="tp-label">${label}</span><span class="tp-value">${value}</span></div>`;
+}
+
+function renderTolSephirahPanel(s) {
+  const accentColor = s.color === 'quartered' ? '#c5b358' : (s.grad ? s.grad[0] : s.color);
+  let h = `<div class="tp-header" style="border-bottom-color:${accentColor}">`;
+  h += `<span class="tp-num" style="background:${accentColor};color:${s.textColor}">${s.id}</span>`;
+  h += `<span class="tp-name">${s.name}</span>`;
+  h += `<div class="tp-hebrew">${s.hebrew}</div>`;
+  h += `<div class="tp-pronun">${s.pronunciation}</div>`;
+  h += `<div class="tp-meaning">${s.meaning}</div>`;
+  if (s.alsoKnown) h += `<div class="tp-also">Also: ${s.alsoKnown}</div>`;
+  h += `</div>`;
+
+  h += `<div class="tp-section"><div class="tp-section-title">Position</div>`;
+  h += tolPanelRow('Pillar', s.pillar);
+  h += tolPanelRow('World', s.world);
+  h += `</div>`;
+
+  h += `<div class="tp-section"><div class="tp-section-title">Divine Correspondences</div>`;
+  h += tolPanelRow('God Name', `<span class="heb">${s.godName.heb}</span> \u00B7 ${s.godName.trans} \u2014 "${s.godName.meaning}"`);
+  h += tolPanelRow('Archangel', `<span class="heb">${s.archangel.heb}</span> \u00B7 ${s.archangel.name}`);
+  h += tolPanelRow('Angelic Order', `<span class="heb">${s.angelicOrder.heb}</span> \u00B7 ${s.angelicOrder.name} \u2014 "${s.angelicOrder.meaning}"`);
+  h += tolPanelRow('Planet', s.planet);
+  h += tolPanelRow('Element', s.element);
+  h += tolPanelRow('Body', s.body);
+  h += `</div>`;
+
+  h += `<div class="tp-section"><div class="tp-section-title">Magical Image</div>`;
+  h += `<div class="tp-image">${s.magicalImage}</div></div>`;
+
+  h += `<div class="tp-section"><div class="tp-section-title">Color Scales</div><div class="tp-colors">`;
+  h += `<div class="tp-color-item"><b>King (Atziluth)</b><br>${s.colors.king}</div>`;
+  h += `<div class="tp-color-item"><b>Queen (Briah)</b><br>${s.colors.queen}</div>`;
+  h += `<div class="tp-color-item"><b>Prince (Yetzirah)</b><br>${s.colors.prince}</div>`;
+  h += `<div class="tp-color-item"><b>Princess (Assiah)</b><br>${s.colors.princess}</div>`;
+  h += `</div></div>`;
+
+  h += `<div class="tp-section"><div class="tp-section-title">Virtue &amp; Vice</div><div class="tp-virtues">`;
+  h += `<div><b>Virtue</b>${s.virtue}</div>`;
+  h += `<div><b>Vice</b>${s.vice}</div>`;
+  h += `</div></div>`;
+
+  h += `<div class="tp-section"><div class="tp-section-title">Qliphoth (Adverse Shell)</div>`;
+  h += `<div class="tp-qliphoth-name">${s.qliphoth.name} \u00B7 <span class="heb">${s.qliphoth.heb}</span></div>`;
+  h += `<div class="tp-qliphoth-meaning">${s.qliphoth.meaning}</div>`;
+  h += `<div class="tp-qliphoth-desc">${s.qliphoth.desc}</div></div>`;
+
+  h += `<div class="tp-section"><div class="tp-section-title">Description</div>`;
+  h += `<div class="tp-desc">${s.desc}</div></div>`;
+
+  document.getElementById('tolModalPanelContent').innerHTML = h;
+  openTolPanel();
+}
+
+function renderTolPathPanel(p) {
+  const fromS = TOL_SEPHIROTH.find(s => s.id === p.from);
+  const toS = TOL_SEPHIROTH.find(s => s.id === p.to);
+  let h = `<div class="tp-header">`;
+  h += `<div class="tp-path-letter">${p.letter}</div>`;
+  h += `<div class="tp-path-lettername">${p.letterName}</div>`;
+  h += `<div class="tp-path-meaning">"${p.letterMeaning}"</div>`;
+  h += `<div class="tp-pronun" style="margin-top:8px">Path ${p.id}</div>`;
+  h += `</div>`;
+
+  h += `<div class="tp-section">`;
+  h += `<div class="tp-connecting"><span>${fromS.name}</span> \u2194 <span>${toS.name}</span></div>`;
+  h += `</div>`;
+
+  h += `<div class="tp-section"><div class="tp-section-title">Tarot Attribution</div>`;
+  h += `<div class="tp-tarot">${p.tarot}</div></div>`;
+
+  h += `<div class="tp-section"><div class="tp-section-title">Astrological Attribution</div>`;
+  h += `<div class="tp-attrib">${p.attribution}</div></div>`;
+
+  h += `<div class="tp-section"><div class="tp-section-title">Description</div>`;
+  h += `<div class="tp-desc">${p.desc}</div></div>`;
+
+  document.getElementById('tolModalPanelContent').innerHTML = h;
+  openTolPanel();
+}
+
+function renderTolDaathPanel() {
+  let h = `<div class="tp-header" style="border-bottom-color:rgba(120,120,200,0.5)">`;
+  h += `<span class="tp-name">${TOL_DAATH.name}</span>`;
+  h += `<div class="tp-hebrew">${TOL_DAATH.hebrew}</div>`;
+  h += `<div class="tp-pronun">${TOL_DAATH.pronunciation}</div>`;
+  h += `<div class="tp-meaning">${TOL_DAATH.meaning}</div>`;
+  h += `<div class="tp-also" style="margin-top:6px">The Hidden Sephirah \u00B7 The Abyss</div>`;
+  h += `</div>`;
+  h += `<div class="tp-section"><div class="tp-section-title">Description</div>`;
+  h += `<div class="tp-desc">${TOL_DAATH.desc}</div></div>`;
+
+  document.getElementById('tolModalPanelContent').innerHTML = h;
+  openTolPanel();
+}
+
+function openTolPanel() {
+  const panel = document.getElementById('tolModalPanel');
+  panel.scrollTop = 0;
+  panel.classList.add('open');
+}
+
+function closeTolPanel() {
+  document.getElementById('tolModalPanel').classList.remove('open');
+  tolModalState = {type: null, id: null};
+  applyTreeHighlight(tolModalTree, null, null);
+  // Re-apply card-based highlight if applicable
+  applyCardHighlightToModal();
+}
+
+function tolModalSelect(type, id) {
+  if (tolModalState.type === type && tolModalState.id === id) {
+    closeTolPanel();
+    return;
+  }
+  tolModalState = {type, id};
+  applyTreeHighlight(tolModalTree, type, id);
+  if (type === 'sephirah') {
+    const s = TOL_SEPHIROTH.find(s => s.id === id);
+    if (s) renderTolSephirahPanel(s);
+  } else if (type === 'path') {
+    const p = TOL_PATHS.find(p => p.id === id);
+    if (p) renderTolPathPanel(p);
+  } else if (type === 'daath') {
+    renderTolDaathPanel();
+  }
+}
+
+function applyCardHighlightToModal() {
+  if (activeReadingIndex < 0 || !drawnCards[activeReadingIndex]) return;
+  const corresp = getCardCorrespondences(drawnCards[activeReadingIndex].name);
+  if (corresp && corresp.type === 'pip') {
+    tolModalSelect('sephirah', corresp.sephirah.id);
+  } else if (corresp && corresp.type === 'major') {
+    tolModalSelect('path', corresp.path.id);
+  }
+}
+
+function openTreeModal() {
+  const modal = document.getElementById('tolModal');
+  const treeArea = document.getElementById('tolModalTree');
+
+  // Build modal tree once
+  if (!tolModalTree) {
+    tolModalTree = buildTreeOfLife('tolm');
+    treeArea.appendChild(tolModalTree.svg);
+
+    // Wire click handlers
+    tolModalTree.svg.querySelectorAll('.seph-group').forEach(g => {
+      g.addEventListener('click', e => {
+        e.stopPropagation();
+        tolModalSelect('sephirah', Number(g.dataset.seph));
+      });
+    });
+    tolModalTree.svg.querySelectorAll('.path-group').forEach(g => {
+      g.addEventListener('click', e => {
+        e.stopPropagation();
+        tolModalSelect('path', Number(g.dataset.path));
+      });
+    });
+    tolModalTree.svg.querySelector('.daath-group').addEventListener('click', e => {
+      e.stopPropagation();
+      tolModalSelect('daath', null);
+    });
+    // Click background to deselect
+    tolModalTree.svg.querySelector('rect').addEventListener('click', () => closeTolPanel());
+  }
+
+  // Apply card-based highlight
+  tolModalState = {type: null, id: null};
+  document.getElementById('tolModalPanel').classList.remove('open');
+  applyTreeHighlight(tolModalTree, null, null);
+  applyCardHighlightToModal();
+
+  modal.classList.add('visible');
+}
+
+function closeTreeModal(e) {
+  if (e && e.target && e.target !== document.getElementById('tolModal')) return;
+  document.getElementById('tolModal').classList.remove('visible');
+  document.getElementById('tolModalPanel').classList.remove('open');
+}
+
+// ─── State ───
+let apiKey = '';
+let significatorCard = null;
+let zodiacSign = '';
+let workingDeck = [];
+let drawnCards = [];
+let currentDealIndex = 0;
+let cutRound = 0;
+let cutPositions = [];
+let pileOrder = [];
+let cardInterpretations = [];
+let abortController = null;
+let activeReadingIndex = -1;
+let isStreaming = false;
+let synthesisText = '';
+let tolTree = null;
+
+// ─── API Key ───
+function saveApiKey() {
+  apiKey = document.getElementById('apiKeyInput').value.trim();
+  if (apiKey) {
+    localStorage.setItem('tarot_api_key', apiKey);
+    document.getElementById('apiKeySection').style.display = 'none';
+    showStep('stepBirthdate');
+  }
+}
+function resetApiKey() {
+  localStorage.removeItem('tarot_api_key');
+  apiKey = '';
+  document.getElementById('apiKeyInput').value = '';
+  document.getElementById('apiKeySection').style.display = '';
+  document.getElementById('apiKeyStatus').textContent = '';
+  hideAllSteps();
+}
+(function() {
+  const saved = localStorage.getItem('tarot_api_key');
+  if (saved) {
+    apiKey = saved;
+    document.getElementById('apiKeySection').style.display = 'none';
+    showStep('stepBirthdate');
+  }
+})();
+
+// ─── Helpers ───
+function showStep(id) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('visible'));
+  document.getElementById(id).classList.add('visible');
+}
+function hideAllSteps() {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('visible'));
+}
+
+function getZodiac(month, day) {
+  if ((month===3 && day>=21) || (month===4 && day<=19)) return 'Aries';
+  if ((month===4 && day>=20) || (month===5 && day<=20)) return 'Taurus';
+  if ((month===5 && day>=21) || (month===6 && day<=20)) return 'Gemini';
+  if ((month===6 && day>=21) || (month===7 && day<=22)) return 'Cancer';
+  if ((month===7 && day>=23) || (month===8 && day<=22)) return 'Leo';
+  if ((month===8 && day>=23) || (month===9 && day<=22)) return 'Virgo';
+  if ((month===9 && day>=23) || (month===10 && day<=22)) return 'Libra';
+  if ((month===10 && day>=23) || (month===11 && day<=21)) return 'Scorpio';
+  if ((month===11 && day>=22) || (month===12 && day<=21)) return 'Sagittarius';
+  if ((month===12 && day>=22) || (month===1 && day<=19)) return 'Capricorn';
+  if ((month===1 && day>=20) || (month===2 && day<=18)) return 'Aquarius';
+  return 'Pisces';
+}
+
+function fisherYates(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ─── Step 1: Birthdate ───
+function submitBirthdate() {
+  const val = document.getElementById('birthdateInput').value;
+  if (!val) return;
+  const [y, m, d] = val.split('-').map(Number);
+  zodiacSign = getZodiac(m, d);
+  const sigName = ZODIAC_TO_CARD[zodiacSign];
+  significatorCard = DECK.find(c => c.name === sigName);
+
+  // Show significator
+  document.getElementById('zodiacName').textContent = zodiacSign;
+  const display = document.getElementById('sigCardDisplay');
+  display.innerHTML = `<img src="${significatorCard.img}" alt="${significatorCard.name}" />`;
+  document.getElementById('sigCardName').textContent = significatorCard.name;
+  showStep('stepSignificator');
+}
+
+// ─── Step 2: Shuffle ───
+function goToShuffle() {
+  // Build working deck (exclude significator)
+  workingDeck = DECK.filter(c => c.name !== significatorCard.name);
+  workingDeck = fisherYates(workingDeck);
+
+  // Build deck stack visual
+  const stack = document.getElementById('deckStack');
+  stack.innerHTML = '';
+  for (let i = 0; i < 7; i++) {
+    const card = document.createElement('div');
+    card.className = 'stack-card';
+    card.style.top = (i * -2) + 'px';
+    card.style.left = (i * 1) + 'px';
+    card.style.setProperty('--sx', Math.random() * 80 - 40);
+    card.style.setProperty('--sy', Math.random() * 60 - 30);
+    card.style.setProperty('--sr', Math.random() * 30 - 15);
+    card.innerHTML = '<div class="back-inner"></div>';
+    stack.appendChild(card);
+  }
+  showStep('stepShuffle');
+}
+
+function doShuffle() {
+  workingDeck = fisherYates(workingDeck);
+  const stack = document.getElementById('deckStack');
+  // Randomize animation vars
+  stack.querySelectorAll('.stack-card').forEach(c => {
+    c.style.setProperty('--sx', Math.random() * 120 - 60);
+    c.style.setProperty('--sy', Math.random() * 80 - 40);
+    c.style.setProperty('--sr', Math.random() * 40 - 20);
+  });
+  stack.classList.remove('shuffling');
+  void stack.offsetWidth; // force reflow
+  stack.classList.add('shuffling');
+}
+
+// ─── Step 3: Cut ───
+function goToCut() {
+  cutRound = 0;
+  startCutRound();
+  showStep('stepCut');
+}
+
+function startCutRound() {
+  cutRound++;
+  cutPositions = [];
+  pileOrder = [];
+  document.getElementById('cutCounter').textContent = `Cut ${cutRound} of 3`;
+  document.getElementById('cutInstruction').textContent = 'Click two cards to divide the deck into three piles';
+  document.getElementById('pilesContainer').style.display = 'none';
+
+  const fan = document.getElementById('cardFan');
+  fan.style.display = 'flex';
+  fan.innerHTML = '';
+  const total = workingDeck.length;
+  for (let i = 0; i < total; i++) {
+    const card = document.createElement('div');
+    card.className = 'fan-card';
+    card.dataset.index = i;
+    card.onclick = () => cutClick(i);
+    fan.appendChild(card);
+  }
+}
+
+function cutClick(index) {
+  if (cutPositions.length >= 2) return;
+  // Don't allow same position or adjacent positions that would make empty piles
+  if (cutPositions.includes(index)) return;
+
+  cutPositions.push(index);
+  document.querySelector(`.fan-card[data-index="${index}"]`).classList.add('cut-mark');
+
+  if (cutPositions.length === 2) {
+    cutPositions.sort((a, b) => a - b);
+    setTimeout(showPiles, 300);
+  }
+}
+
+function showPiles() {
+  document.getElementById('cardFan').style.display = 'none';
+  document.getElementById('cutInstruction').textContent = 'Click the piles in the order to recombine them';
+
+  const [c1, c2] = cutPositions;
+  const pile1 = workingDeck.slice(0, c1 + 1);
+  const pile2 = workingDeck.slice(c1 + 1, c2 + 1);
+  const pile3 = workingDeck.slice(c2 + 1);
+  const piles = [pile1, pile2, pile3];
+
+  const container = document.getElementById('pilesContainer');
+  container.style.display = 'flex';
+  container.innerHTML = '';
+
+  piles.forEach((pile, i) => {
+    const pileEl = document.createElement('div');
+    pileEl.className = 'pile';
+    pileEl.dataset.pileIndex = i;
+
+    const cards = document.createElement('div');
+    cards.className = 'pile-cards';
+    const count = Math.min(pile.length, 6);
+    for (let j = 0; j < count; j++) {
+      const c = document.createElement('div');
+      c.className = 'pile-card';
+      c.style.top = (j * -2) + 'px';
+      c.style.left = (j * 1) + 'px';
+      cards.appendChild(c);
+    }
+
+    const label = document.createElement('div');
+    label.className = 'pile-label';
+    label.textContent = `${pile.length} cards`;
+
+    const order = document.createElement('div');
+    order.className = 'pile-order';
+    order.id = `pile-order-${i}`;
+
+    pileEl.appendChild(cards);
+    pileEl.appendChild(label);
+    pileEl.appendChild(order);
+    pileEl.onclick = () => selectPile(i, piles);
+    container.appendChild(pileEl);
+  });
+}
+
+function selectPile(index, piles) {
+  if (pileOrder.includes(index)) return;
+  pileOrder.push(index);
+  const orderEl = document.getElementById(`pile-order-${index}`);
+  orderEl.textContent = pileOrder.length;
+  document.querySelector(`.pile[data-pile-index="${index}"]`).classList.add('selected');
+
+  if (pileOrder.length === 3) {
+    // Recombine
+    const newDeck = [];
+    pileOrder.forEach(i => {
+      const [c1, c2] = cutPositions;
+      const slices = [
+        workingDeck.slice(0, c1 + 1),
+        workingDeck.slice(c1 + 1, c2 + 1),
+        workingDeck.slice(c2 + 1)
+      ];
+      newDeck.push(...slices[i]);
+    });
+    workingDeck = newDeck;
+
+    if (cutRound < 3) {
+      setTimeout(startCutRound, 600);
+    } else {
+      setTimeout(goToDeal, 600);
+    }
+  }
+}
+
+// ─── Step 4: Deal ───
+function goToDeal() {
+  currentDealIndex = 0;
+  cardInterpretations = [];
+  drawnCards = workingDeck.slice(0, 10).map(card => ({
+    ...card,
+    reversed: Math.random() < 0.35
+  }));
+
+  showStep('stepDeal');
+
+  // Place significator in grid
+  const sigSlot = document.getElementById('slot-sig');
+  sigSlot.innerHTML = `<div class="sig-in-grid"><img src="${significatorCard.img}" alt="${significatorCard.name}" /></div>`;
+
+  // Create all cards face-down
+  for (let i = 0; i < 10; i++) {
+    createCardHTML(drawnCards[i], i);
+  }
+
+  // Show sticky bar with first position context
+  updateStickyBar(0);
+  document.getElementById('stickyBar').classList.add('visible');
+  document.body.classList.add('has-sticky-bar');
+
+  // Reset reading panel
+  activeReadingIndex = -1;
+  synthesisText = '';
+  isStreaming = false;
+  document.getElementById('readingPanel').classList.remove('visible', 'expanded');
+  document.getElementById('readingPanelContent').innerHTML = '';
+  document.getElementById('readingPanelHeader').innerHTML = '';
+  document.getElementById('readingPanelCorrespondences').innerHTML = '';
+  buildReadingNav();
+
+  // Build Tree of Life (once)
+  const treeContainer = document.getElementById('treeContainer');
+  if (!tolTree) {
+    tolTree = buildTreeOfLife('tol');
+    treeContainer.appendChild(tolTree.svg);
+    // Make whole container clickable
+    treeContainer.onclick = openTreeModal;
+    // Add button
+    const exploreBtn = document.createElement('button');
+    exploreBtn.className = 'tol-explore-btn';
+    exploreBtn.textContent = 'View more details';
+    exploreBtn.onclick = function(e) { e.stopPropagation(); openTreeModal(); };
+    treeContainer.appendChild(exploreBtn);
+  }
+  treeContainer.style.display = 'none';
+  clearTreeHighlight();
+}
+
+function createCardHTML(card, index) {
+  const slot = document.getElementById(`slot-${index}`);
+  slot.innerHTML = '';
+
+  const cardSlot = document.createElement('div');
+  cardSlot.className = 'card-slot';
+  cardSlot.onclick = () => handleCardClick(index);
+
+  const inner = document.createElement('div');
+  inner.className = 'card-inner';
+  inner.id = `card-inner-${index}`;
+
+  const back = document.createElement('div');
+  back.className = 'card-face card-back';
+  back.innerHTML = '<div class="card-back-pattern"></div>';
+
+  const front = document.createElement('div');
+  front.className = 'card-face card-front' + (card.reversed ? ' reversed' : '');
+
+  const img = document.createElement('img');
+  img.src = card.img;
+  img.alt = card.name;
+  img.loading = 'lazy';
+  front.appendChild(img);
+
+  if (card.reversed) {
+    const badge = document.createElement('div');
+    badge.className = 'reversed-badge';
+    badge.textContent = 'Reversed';
+    front.appendChild(badge);
+  }
+
+  inner.appendChild(back);
+  inner.appendChild(front);
+
+  const labels = document.createElement('div');
+  labels.className = 'card-labels';
+  const posLabel = document.createElement('div');
+  posLabel.className = 'position-label';
+  posLabel.textContent = POSITIONS[index];
+  const nameLabel = document.createElement('div');
+  nameLabel.className = 'card-name-label';
+  nameLabel.textContent = card.name;
+  labels.appendChild(posLabel);
+  labels.appendChild(nameLabel);
+
+  cardSlot.appendChild(inner);
+  if (index === 1) {  // Card 2 (crossing) - pill overlay instead of labels
+    slot.appendChild(cardSlot);
+    const overlay = document.createElement('div');
+    overlay.className = 'position-overlay';
+    overlay.textContent = POSITIONS[index];
+    slot.appendChild(overlay);
+  } else {
+    cardSlot.appendChild(labels);
+    slot.appendChild(cardSlot);
+  }
+}
+
+function updateStickyBar(index) {
+  document.getElementById('stickyPosInfo').textContent = `Position ${index + 1}: ${POSITIONS[index]}`;
+  document.getElementById('stickyPosDesc').textContent = POSITION_DESC[index];
+  const btn = document.getElementById('stickyBtn');
+  btn.textContent = 'Reveal Next Card';
+  btn.disabled = false;
+  btn.onclick = dealNextCard;
+}
+
+function dealNextCard() {
+  if (currentDealIndex >= 10) return;
+
+  const btn = document.getElementById('stickyBtn');
+  btn.disabled = true;
+  btn.textContent = 'Reading the card...';
+
+  const cardIndex = currentDealIndex;
+  const inner = document.getElementById(`card-inner-${cardIndex}`);
+  inner.classList.add('flipped');
+  inner.closest('.card-slot').classList.add('flipped');
+  setTimeout(() => {
+    document.getElementById(`slot-${cardIndex}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+
+  currentDealIndex++;
+
+  // Start per-card interpretation in reading panel
+  interpretCard(cardIndex);
+}
+
+// ─── Modal ───
+function showModal(index) {
+  const card = drawnCards[index];
+  if (!card) return;
+  // Only show if card has been flipped
+  const inner = document.getElementById(`card-inner-${index}`);
+  if (!inner || !inner.classList.contains('flipped')) return;
+
+  document.getElementById('modalImg').src = card.img;
+  document.getElementById('modalImg').className = card.reversed ? 'reversed' : '';
+  document.getElementById('modalName').textContent = card.name;
+  document.getElementById('modalPosition').textContent = `${POSITIONS[index]} — ${POSITION_DESC[index]}`;
+  const orientEl = document.getElementById('modalOrientation');
+  orientEl.textContent = card.reversed ? 'Reversed' : 'Upright';
+  orientEl.className = 'orientation ' + (card.reversed ? 'reversed-tag' : 'upright');
+  document.getElementById('modalMeaning').textContent = card.reversed ? card.reversedMeaning : card.uprightMeaning;
+  document.getElementById('modal').classList.add('visible');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) {
+    document.getElementById('modal').classList.remove('visible');
+  }
+}
+
+// ─── Reading Panel ───
+function handleCardClick(index) {
+  const card = drawnCards[index];
+  if (!card) return;
+  const inner = document.getElementById(`card-inner-${index}`);
+  if (!inner || !inner.classList.contains('flipped')) return;
+
+  if (cardInterpretations[index] || (isStreaming && activeReadingIndex === index)) {
+    showCardReading(index);
+  } else {
+    showModal(index);
+  }
+}
+
+function showCardReading(index) {
+  if (isStreaming && index !== activeReadingIndex) return;
+
+  const card = drawnCards[index];
+  if (!card) return;
+  const inner = document.getElementById(`card-inner-${index}`);
+  if (!inner || !inner.classList.contains('flipped')) return;
+
+  activeReadingIndex = index;
+  const orientation = card.reversed ? 'Reversed' : 'Upright';
+  const orientClass = card.reversed ? 'reversed' : 'upright';
+
+  const header = document.getElementById('readingPanelHeader');
+  header.innerHTML = `<h3>${POSITIONS[index]} \u2014 ${card.name}</h3>
+    <span class="card-orientation ${orientClass}">${orientation}</span>
+    <div class="pos-desc">${POSITION_DESC[index]}</div>`;
+
+  // Kabbalistic correspondences
+  const correspEl = document.getElementById('readingPanelCorrespondences');
+  const treeEl = document.getElementById('treeContainer');
+  const corresp = getCardCorrespondences(card.name);
+  if (corresp) {
+    if (corresp.type === 'pip') {
+      correspEl.innerHTML = `<div class="card-correspondences">
+        <div class="corresp-row"><span class="corresp-label">Thoth Name</span><span class="corresp-value">${corresp.thothName}</span></div>
+        <div class="corresp-row"><span class="corresp-label">Sephirah</span><span class="corresp-value">${corresp.sephirah.id} \u2014 ${corresp.sephirah.name} (${corresp.sephirah.meaning})</span></div>
+        <div class="corresp-row"><span class="corresp-label">Element</span><span class="corresp-value">${corresp.element}</span></div>
+      </div>`;
+      highlightTreeSephirah(corresp.sephirah.id);
+    } else if (corresp.type === 'major') {
+      const fromName = SEPHIROTH_BY_NUMBER[corresp.path.from].name;
+      const toName = SEPHIROTH_BY_NUMBER[corresp.path.to].name;
+      correspEl.innerHTML = `<div class="card-correspondences">
+        <div class="corresp-row"><span class="corresp-label">Hebrew</span><span class="corresp-value"><span class="hebrew-letter">${corresp.path.letter}</span> \u2014 ${corresp.path.letterName}</span></div>
+        <div class="corresp-row"><span class="corresp-label">Path</span><span class="corresp-value">${fromName} \u2194 ${toName}</span></div>
+        <div class="corresp-row"><span class="corresp-label">Attribution</span><span class="corresp-value">${corresp.path.attribution}</span></div>
+      </div>`;
+      highlightTreePath(corresp.path.id);
+    }
+    treeEl.style.display = '';
+  } else {
+    correspEl.innerHTML = '';
+    clearTreeHighlight();
+    treeEl.style.display = '';
+  }
+
+  const content = document.getElementById('readingPanelContent');
+  if (!isStreaming || activeReadingIndex !== index) {
+    if (cardInterpretations[index]) {
+      content.innerHTML = formatMarkdown(cardInterpretations[index]);
+    } else {
+      content.innerHTML = '';
+    }
+  }
+
+  // Highlight active card in spread
+  document.querySelectorAll('.card-slot').forEach(s => s.classList.remove('active-reading'));
+  const slot = document.querySelector(`#slot-${index} .card-slot`);
+  if (slot) slot.classList.add('active-reading');
+
+  // Highlight active nav dot
+  document.querySelectorAll('.reading-panel-nav .nav-dot').forEach(d => d.classList.remove('active'));
+  const dot = document.querySelector(`.nav-dot[data-index="${index}"]`);
+  if (dot) dot.classList.add('active');
+
+  // On mobile, expand the drawer
+  if (window.innerWidth <= 768) {
+    document.getElementById('readingPanel').classList.add('expanded');
+  }
+}
+
+function showSynthesisReading() {
+  if (isStreaming && activeReadingIndex !== -2) return;
+
+  activeReadingIndex = -2;
+  const header = document.getElementById('readingPanelHeader');
+  header.innerHTML = `<h3>Synthesis</h3>
+    <div class="pos-desc">The threads of all ten cards woven together</div>`;
+  document.getElementById('readingPanelCorrespondences').innerHTML = '';
+  document.getElementById('treeContainer').style.display = 'none';
+  clearTreeHighlight();
+
+  const content = document.getElementById('readingPanelContent');
+  if (synthesisText) {
+    content.innerHTML = formatMarkdown(synthesisText);
+  }
+
+  document.querySelectorAll('.reading-panel-nav .nav-dot').forEach(d => d.classList.remove('active'));
+  const sDot = document.getElementById('nav-dot-synthesis');
+  if (sDot) sDot.classList.add('active');
+  document.querySelectorAll('.card-slot').forEach(s => s.classList.remove('active-reading'));
+}
+
+function buildReadingNav() {
+  const nav = document.getElementById('readingPanelNav');
+  nav.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot';
+    dot.textContent = i + 1;
+    dot.dataset.index = i;
+    dot.onclick = () => showCardReading(i);
+    nav.appendChild(dot);
+  }
+  const sDot = document.createElement('button');
+  sDot.className = 'nav-dot';
+  sDot.id = 'nav-dot-synthesis';
+  sDot.textContent = 'S';
+  sDot.style.display = 'none';
+  sDot.onclick = () => showSynthesisReading();
+  nav.appendChild(sDot);
+}
+
+function toggleReadingDrawer() {
+  const panel = document.getElementById('readingPanel');
+  panel.classList.toggle('expanded');
+}
+
+// ─── Interpretation ───
+function buildCardContext(upToIndex) {
+  let text = `Querent's zodiac sign: ${zodiacSign}\n`;
+  text += `Significator card: ${significatorCard.name}\n\n`;
+  for (let i = 0; i <= upToIndex; i++) {
+    const card = drawnCards[i];
+    const orientation = card.reversed ? 'Reversed' : 'Upright';
+    text += `Position ${i + 1} — ${POSITIONS[i]}:\n`;
+    text += `  Card: ${card.name} (${orientation})\n`;
+    text += `  Keywords: ${card.reversed ? card.reversedMeaning : card.uprightMeaning}\n`;
+    const c = getCardCorrespondences(card.name);
+    if (c && c.type === 'pip') {
+      text += `  Kabbalistic: ${c.sephirah.name} (${c.sephirah.meaning}), ${c.element}, Thoth name: "${c.thothName}"\n`;
+    } else if (c && c.type === 'major') {
+      text += `  Kabbalistic: Path of ${c.path.letterName} (${c.path.letter}), ${SEPHIROTH_BY_NUMBER[c.path.from].name} \u2194 ${SEPHIROTH_BY_NUMBER[c.path.to].name}, ${c.path.attribution}\n`;
+    }
+    if (cardInterpretations[i]) {
+      text += `  Previous interpretation: ${cardInterpretations[i]}\n`;
+    }
+    text += '\n';
+  }
+  return text;
+}
+
+async function streamToElement(el, systemPrompt, userMessage, maxTokens, appendMode) {
+  abortController = new AbortController();
+  let fullText = '';
+
+  if (appendMode) {
+    // Add a loading indicator at the end
+    const loader = document.createElement('div');
+    loader.className = 'loading-indicator';
+    loader.id = 'current-loader';
+    loader.innerHTML = '';
+    el.appendChild(loader);
+  } else {
+    el.innerHTML = '';
+  }
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: maxTokens,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userMessage }],
+        stream: true
+      }),
+      signal: abortController.signal
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      const loaderEl = document.getElementById('current-loader');
+      if (loaderEl) loaderEl.remove();
+      const errP = document.createElement('p');
+      errP.style.color = '#c44';
+      errP.textContent = `API Error: ${response.status}. ${err}`;
+      el.appendChild(errP);
+      return '';
+    }
+
+    // Remove loader
+    const loaderEl = document.getElementById('current-loader');
+    if (loaderEl) loaderEl.remove();
+
+    // Create a container for this interpretation's streaming content
+    const streamDiv = document.createElement('div');
+    streamDiv.className = 'card-reading-stream';
+    el.appendChild(streamDiv);
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
+          if (data === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+              fullText += parsed.delta.text;
+              streamDiv.innerHTML = formatMarkdown(fullText) + '<span class="cursor"></span>';
+            }
+          } catch (e) {}
+        }
+      }
+    }
+    // Final render without cursor
+    streamDiv.innerHTML = formatMarkdown(fullText);
+    return fullText;
+
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      const errP = document.createElement('p');
+      errP.style.color = '#c44';
+      errP.textContent = `Error: ${err.message}`;
+      el.appendChild(errP);
+    }
+    return '';
+  }
+}
+
+async function interpretCard(index) {
+  const card = drawnCards[index];
+  const orientation = card.reversed ? 'Reversed' : 'Upright';
+
+  // Show the reading panel and switch to this card
+  document.getElementById('readingPanel').classList.add('visible');
+  showCardReading(index);
+
+  // Mark nav dot as available
+  const dot = document.querySelector(`.nav-dot[data-index="${index}"]`);
+  if (dot) dot.classList.add('available');
+
+  // Build Kabbalistic context for the prompt
+  let kabbalahContext = '';
+  const corresp = getCardCorrespondences(card.name);
+  if (corresp) {
+    if (corresp.type === 'pip') {
+      kabbalahContext = ` This card corresponds to ${corresp.sephirah.name} (${corresp.sephirah.meaning}) on the Tree of Life, the element of ${corresp.element}, and is known in the Thoth tradition as "${corresp.thothName}."`;
+    } else if (corresp.type === 'major') {
+      const fromName = SEPHIROTH_BY_NUMBER[corresp.path.from].name;
+      const toName = SEPHIROTH_BY_NUMBER[corresp.path.to].name;
+      kabbalahContext = ` This card corresponds to the path of ${corresp.path.letterName} (${corresp.path.letter}) connecting ${fromName} and ${toName} on the Tree of Life, attributed to ${corresp.path.attribution}.`;
+    }
+  }
+
+  const systemPrompt = `You are a wise tarot reader interpreting a single card in a Celtic Cross reading. The querent's zodiac sign is ${zodiacSign} and their significator is ${significatorCard.name}.
+
+Interpret this newly revealed card in 2-3 concise paragraphs. Consider its position meaning, its Kabbalistic correspondences on the Tree of Life, and how it relates to any previously revealed cards. Use evocative but grounded language. Address the querent as "you." Do not use markdown headers — just flowing prose.`;
+
+  const context = buildCardContext(index);
+  const userMessage = `Here is the reading so far:\n\n${context}\nThe card just revealed is Position ${index + 1} (${POSITIONS[index]}): ${card.name} (${orientation}).${kabbalahContext} Please interpret this card.`;
+
+  const contentEl = document.getElementById('readingPanelContent');
+  isStreaming = true;
+  document.getElementById('readingPanel').classList.add('streaming');
+  const result = await streamToElement(contentEl, systemPrompt, userMessage, 800, false);
+  cardInterpretations[index] = result;
+  isStreaming = false;
+  document.getElementById('readingPanel').classList.remove('streaming');
+
+  // After streaming completes, update the sticky bar
+  const btn = document.getElementById('stickyBtn');
+  if (currentDealIndex < 10) {
+    updateStickyBar(currentDealIndex);
+  } else {
+    // All cards dealt — offer synthesis
+    document.getElementById('stickyPosInfo').textContent = 'All cards revealed';
+    document.getElementById('stickyPosDesc').textContent = 'Receive a final synthesis weaving all the cards together';
+    btn.textContent = 'Get Synthesis';
+    btn.disabled = false;
+    btn.onclick = getSynthesis;
+    const sDot = document.getElementById('nav-dot-synthesis');
+    if (sDot) sDot.style.display = '';
+  }
+}
+
+async function getSynthesis() {
+  const btn = document.getElementById('stickyBtn');
+  btn.disabled = true;
+  btn.textContent = 'Weaving the threads...';
+
+  // Update panel header for synthesis
+  activeReadingIndex = -2;
+  const header = document.getElementById('readingPanelHeader');
+  header.innerHTML = `<h3>Synthesis</h3>
+    <div class="pos-desc">The threads of all ten cards woven together</div>`;
+  document.getElementById('readingPanelCorrespondences').innerHTML = '';
+  document.getElementById('treeContainer').style.display = 'none';
+  clearTreeHighlight();
+
+  document.querySelectorAll('.reading-panel-nav .nav-dot').forEach(d => d.classList.remove('active'));
+  const sDot = document.getElementById('nav-dot-synthesis');
+  if (sDot) sDot.classList.add('active', 'available');
+  document.querySelectorAll('.card-slot').forEach(s => s.classList.remove('active-reading'));
+
+  const contentEl = document.getElementById('readingPanelContent');
+
+  const systemPrompt = `You are a wise tarot reader providing the final synthesis of a Celtic Cross reading. The querent's zodiac sign is ${zodiacSign} and their significator is ${significatorCard.name}.
+
+Weave all 10 cards together into a cohesive narrative. Draw connections between positions, their Kabbalistic correspondences on the Tree of Life, and identify overarching themes. Note patterns in the sephiroth and elements that appear. Offer guidance. Be poetic but insightful. Address the querent as "you." Use flowing prose with paragraph breaks. Do not use markdown headers.`;
+
+  const fullContext = buildCardContext(9);
+  const userMessage = `Here is the complete Celtic Cross reading with all individual interpretations:\n\n${fullContext}\nPlease provide a final synthesis that weaves all the cards together into a coherent narrative.`;
+
+  isStreaming = true;
+  document.getElementById('readingPanel').classList.add('streaming');
+  synthesisText = await streamToElement(contentEl, systemPrompt, userMessage, 2000, false);
+  isStreaming = false;
+  document.getElementById('readingPanel').classList.remove('streaming');
+
+  // Hide sticky bar
+  document.getElementById('stickyBar').classList.remove('visible');
+  document.body.classList.remove('has-sticky-bar');
+}
+
+function formatMarkdown(text) {
+  return text
+    .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+    .replace(/^## (.+)$/gm, '<h3 style="color:#c9a84c;margin:18px 0 8px;">$1</h3>')
+    .replace(/^# (.+)$/gm, '<h2 style="color:#c9a84c;margin:18px 0 8px;">$1</h2>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>')
+    .replace(/^/, '<p>')
+    .replace(/$/, '</p>');
+}
+
+function startOver() {
+  if (abortController) { abortController.abort(); abortController = null; }
+  significatorCard = null;
+  zodiacSign = '';
+  workingDeck = [];
+  drawnCards = [];
+  cardInterpretations = [];
+  currentDealIndex = 0;
+  cutRound = 0;
+  for (let i = 0; i < 10; i++) {
+    const slot = document.getElementById(`slot-${i}`);
+    if (slot) slot.innerHTML = '';
+  }
+  const sigSlot = document.getElementById('slot-sig');
+  if (sigSlot) sigSlot.innerHTML = '';
+  activeReadingIndex = -1;
+  isStreaming = false;
+  synthesisText = '';
+  document.getElementById('readingPanel').classList.remove('visible', 'expanded');
+  document.getElementById('readingPanelContent').innerHTML = '';
+  document.getElementById('readingPanelHeader').innerHTML = '';
+  document.getElementById('stickyBar').classList.remove('visible');
+  document.body.classList.remove('has-sticky-bar');
+  if (apiKey) {
+    showStep('stepBirthdate');
+  } else {
+    hideAllSteps();
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const tolModal = document.getElementById('tolModal');
+    if (tolModal.classList.contains('visible')) {
+      const tolPanel = document.getElementById('tolModalPanel');
+      if (tolPanel.classList.contains('open')) { closeTolPanel(); }
+      else { tolModal.classList.remove('visible'); }
+    } else {
+      document.getElementById('modal').classList.remove('visible');
+    }
+  }
+});
+</script>
+</body>
+</html>
