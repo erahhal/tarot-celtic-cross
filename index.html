@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Celtic Cross Tarot Reading</title>
+<title>Tarot Reading</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 
@@ -212,52 +212,50 @@
     margin-top: 5px; min-height: 1.5em;
   }
 
-  /* Deal step & Celtic Cross Layout */
-  .cross-layout {
-    display: grid;
-    grid-template-columns: 200px 200px 200px 60px 200px;
-    grid-template-rows: 310px 310px 310px 310px;
-    gap: 12px;
-    justify-content: center; align-items: center;
-    margin: 0 auto; max-width: 1100px;
+  /* Spread Selection */
+  .spread-select-section { text-align: center; max-width: 750px; margin: 0 auto; padding: 20px; }
+  .spread-categories { text-align: left; }
+  .spread-category { margin-bottom: 24px; }
+  .spread-category h3 {
+    font-size: 0.9em; color: #8a7d65; text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 10px; padding-bottom: 6px;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
   }
+  .spread-options { display: flex; flex-wrap: wrap; gap: 12px; }
+  .spread-option {
+    flex: 1 1 200px; max-width: 340px;
+    background: rgba(26,18,53,0.6); border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px; padding: 16px; cursor: pointer;
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+  }
+  .spread-option:hover {
+    border-color: #c9a84c; background: rgba(201,168,76,0.08);
+    box-shadow: 0 0 12px rgba(201,168,76,0.15);
+  }
+  .spread-option-name {
+    font-family: 'Cinzel', serif; color: #c9a84c; font-size: 1em; margin-bottom: 6px;
+  }
+  .spread-option-desc { color: #8a7d65; font-size: 0.9em; font-style: italic; margin-bottom: 8px; }
+  .spread-option-cards { color: #5a5040; font-size: 0.8em; font-family: 'Cinzel', serif; }
 
-  .pos-sig { grid-column: 2; grid-row: 2; z-index: 0; }
-  .pos-1 { grid-column: 2; grid-row: 2; z-index: 1; }
-  .pos-2 { grid-column: 2; grid-row: 2; z-index: 2; }
-  .pos-3 { grid-column: 2; grid-row: 3; }
-  .pos-4 { grid-column: 1; grid-row: 2; }
-  .pos-5 { grid-column: 2; grid-row: 1; }
-  .pos-6 { grid-column: 3; grid-row: 2; }
-  .pos-7 { grid-column: 5; grid-row: 4; }
-  .pos-8 { grid-column: 5; grid-row: 3; }
-  .pos-9 { grid-column: 5; grid-row: 2; }
-  .pos-10-wrapper { grid-column: 5; grid-row: 1; }
+  /* Question Input */
+  .question-section { text-align: center; max-width: 500px; margin: 0 auto; padding: 20px; }
+  .question-section textarea {
+    width: 100%; padding: 12px; border-radius: 6px;
+    border: 1px solid rgba(201,168,76,0.4); background: rgba(26,18,53,0.8);
+    color: #d4c5a0; font-family: 'Crimson Text', Georgia, serif; font-size: 1.1em;
+    resize: vertical; min-height: 80px;
+  }
+  .question-section textarea::placeholder { color: #5a5040; font-style: italic; }
+  .question-section textarea:focus { outline: none; border-color: #c9a84c; }
+
+  /* Deal step */
 
   .card-slot {
     width: 170px; height: 264px; perspective: 800px;
     margin: 0 auto; cursor: pointer; position: relative;
   }
   .card-labels { text-align: center; margin-top: 6px; }
-  .pos-2 { position: relative; }
-  .pos-2 .position-overlay {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(26, 18, 53, 0.85);
-    border: 1px solid rgba(201, 168, 76, 0.5);
-    border-radius: 20px;
-    padding: 4px 14px;
-    color: #8a7d65;
-    font-family: 'Cinzel', serif;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 0.75em;
-    white-space: nowrap;
-    z-index: 5;
-    pointer-events: none;
-  }
-  .pos-2:has(.flipped) .position-overlay { display: none; }
   .position-label {
     font-size: 0.85em; color: #8a7d65; white-space: nowrap;
     font-family: 'Cinzel', serif; text-transform: uppercase; letter-spacing: 1px;
@@ -316,7 +314,6 @@
   }
   .sig-in-grid img { width: 100%; height: 100%; object-fit: cover; }
 
-  .pos-2 .card-slot { transform: rotate(90deg); }
 
   /* Sticky action bar */
   .sticky-bar {
@@ -629,21 +626,11 @@
 
   /* Responsive */
   @media (max-width: 1024px) {
-    .cross-layout {
-      grid-template-columns: 150px 150px 150px 30px 150px;
-      grid-template-rows: 260px 260px 260px 260px; gap: 8px;
-    }
-    .card-slot, .sig-in-grid { width: 130px; height: 202px; }
     .position-label { font-size: 0.75em; }
     .card-name-label { font-size: 0.7em; }
     .reading-panel { min-width: 240px; max-width: 350px; padding: 18px; }
   }
   @media (max-width: 768px) {
-    .cross-layout {
-      grid-template-columns: 110px 110px 110px 20px 110px;
-      grid-template-rows: 210px 210px 210px 210px; gap: 6px;
-    }
-    .card-slot, .sig-in-grid { width: 100px; height: 155px; }
     .position-label { font-size: 0.65em; }
     .card-name-label { font-size: 0.6em; }
     header h1 { font-size: 1.6em; }
@@ -694,11 +681,6 @@
     body.has-sticky-bar { padding-bottom: 200px; }
   }
   @media (max-width: 580px) {
-    .cross-layout {
-      grid-template-columns: 80px 80px 80px 15px 80px;
-      grid-template-rows: 170px 170px 170px 170px; gap: 4px;
-    }
-    .card-slot, .sig-in-grid { width: 72px; height: 112px; }
     .position-label { font-size: 0.55em; }
     .card-name-label { font-size: 0.5em; }
     .sig-card-display { width: 100px; height: 155px; }
@@ -710,7 +692,7 @@
 <body>
 <div class="container">
   <header>
-    <h1>Celtic Cross Tarot</h1>
+    <h1>Tarot</h1>
     <p>Seek the wisdom of the cards</p>
   </header>
 
@@ -722,6 +704,15 @@
     </div>
     <div class="api-key-hint">Get your key at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">console.anthropic.com</a></div>
     <div class="api-key-status" id="apiKeyStatus"></div>
+  </div>
+
+  <!-- Step 0: Spread Selection -->
+  <div class="step" id="stepSpreadSelect">
+    <div class="spread-select-section">
+      <h2>Choose Your Spread</h2>
+      <p style="color:#8a7d65;font-style:italic;margin-bottom:20px;">Select a spread that matches your question and desired depth</p>
+      <div class="spread-categories" id="spreadCategories"></div>
+    </div>
   </div>
 
   <!-- Step 1: Birthdate -->
@@ -747,7 +738,22 @@
       <div class="sig-card-display" id="sigCardDisplay"></div>
       <div style="margin-top:10px;font-size:1.1em;color:#c9a84c;" id="sigCardName"></div>
       <div class="btn-row">
-        <button class="btn" onclick="goToShuffle()">Shuffle the Deck</button>
+        <button class="btn" onclick="showStep('stepQuestion')">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step: Question -->
+  <div class="step" id="stepQuestion">
+    <div class="question-section">
+      <h2>Focus Your Intention</h2>
+      <p style="color:#8a7d65;font-style:italic;margin-bottom:15px;">What question or situation would you like the cards to illuminate?</p>
+      <textarea id="questionInput" rows="3" placeholder="What do I need to know about..."></textarea>
+      <div class="btn-row">
+        <button class="btn" onclick="submitQuestion()">Begin the Reading</button>
+      </div>
+      <div class="btn-row" style="margin-top:0;">
+        <button class="btn-secondary" onclick="submitQuestion(true)">Skip — General Reading</button>
       </div>
     </div>
   </div>
@@ -779,21 +785,7 @@
   <!-- Step 5: Deal -->
   <div class="step" id="stepDeal">
     <div class="deal-layout">
-      <div class="spread">
-        <div class="cross-layout">
-          <div class="pos-sig" id="slot-sig"></div>
-          <div class="pos-1" id="slot-0"></div>
-          <div class="pos-2" id="slot-1"></div>
-          <div class="pos-3" id="slot-2"></div>
-          <div class="pos-4" id="slot-3"></div>
-          <div class="pos-5" id="slot-4"></div>
-          <div class="pos-6" id="slot-5"></div>
-          <div class="pos-7" id="slot-6"></div>
-          <div class="pos-8" id="slot-7"></div>
-          <div class="pos-9" id="slot-8"></div>
-          <div class="pos-10-wrapper" id="slot-9"></div>
-        </div>
-      </div>
+      <div class="spread" id="spreadContainer"></div>
       <div class="reading-panel" id="readingPanel">
         <div class="drawer-handle"><button class="drawer-close-btn" onclick="closeReadingDrawer()" aria-label="Close reading panel">&times;</button></div>
         <div class="reading-panel-header" id="readingPanelHeader"></div>
@@ -843,31 +835,169 @@
 </div>
 
 <script>
-const POSITIONS = [
-  "The Present",
-  "The Challenge",
-  "The Foundation",
-  "The Recent Past",
-  "The Crown",
-  "The Near Future",
-  "The Self",
-  "The Environment",
-  "Hopes & Fears",
-  "The Outcome"
-];
+const SPREADS = {
+  // ── Three Card Spreads ──
+  past_present_future: {
+    name: "Past / Present / Future",
+    category: "Three Cards",
+    description: "A classic for timing and trajectory",
+    cardCount: 3,
+    usesSignificator: false,
+    positions: [
+      { name: "The Past", desc: "What has led you to this moment — past influences still shaping your path." },
+      { name: "The Present", desc: "Where you stand now — the current energies and circumstances." },
+      { name: "The Future", desc: "Where you are headed — the trajectory of events if the current path continues." }
+    ],
+    layout: { type: "row" }
+  },
+  mind_body_spirit: {
+    name: "Mind / Body / Spirit",
+    category: "Three Cards",
+    description: "For personal wellness or holistic check-ins",
+    cardCount: 3,
+    usesSignificator: false,
+    positions: [
+      { name: "Mind", desc: "Your mental state — thoughts, beliefs, and intellectual patterns at work." },
+      { name: "Body", desc: "Your physical realm — health, material circumstances, and embodied experience." },
+      { name: "Spirit", desc: "Your spiritual condition — inner wisdom, higher purpose, and soul-level truth." }
+    ],
+    layout: { type: "row" }
+  },
+  situation_action_outcome: {
+    name: "Situation / Action / Outcome",
+    category: "Three Cards",
+    description: "For practical problem-solving",
+    cardCount: 3,
+    usesSignificator: false,
+    positions: [
+      { name: "Situation", desc: "The heart of the matter — what you are dealing with right now." },
+      { name: "Action", desc: "What you should do — the recommended course of action." },
+      { name: "Outcome", desc: "The likely result — what follows if you take this action." }
+    ],
+    layout: { type: "row" }
+  },
 
-const POSITION_DESC = [
-  "This card covers you — it represents your current situation, the energies surrounding you right now.",
-  "This card crosses you — it reveals the immediate challenge or obstacle you face. It may oppose or complement the first card.",
-  "This card is beneath you — it shows the foundation, the root cause or subconscious influence that underlies everything.",
-  "This card is behind you — it represents the recent past and the energies that are now fading.",
-  "This card crowns you — it shows the best possible outcome, your highest aspirations for this situation.",
-  "This card is before you — it reveals what is approaching in the near future.",
-  "This card represents you — your current attitude, how you see yourself in this situation.",
-  "This card represents your environment — the external influences, the people and energies around you.",
-  "This card reveals your hopes and fears — the deepest desires and anxieties you hold within.",
-  "This card is the final outcome — the culmination and resolution of all the forces at play."
-];
+  // ── Five Card Spreads ──
+  five_card_cross: {
+    name: "Five-Card Cross",
+    category: "Five Cards",
+    description: "Past, Present, and Future with potential above and core reason below",
+    cardCount: 5,
+    usesSignificator: false,
+    positions: [
+      { name: "The Past", desc: "Events and influences from your past bearing on this question." },
+      { name: "The Present", desc: "Your current situation and the energies you carry now." },
+      { name: "The Future", desc: "Where things are headed — the emerging trajectory." },
+      { name: "Potential", desc: "The highest potential — what this situation could become at its best." },
+      { name: "Core Reason", desc: "The root cause — the deep underlying reason for this situation." }
+    ],
+    layout: {
+      type: "grid",
+      gridTemplateColumns: "1fr 1fr 1fr",
+      gridTemplateRows: "1fr 1fr 1fr",
+      positions: [
+        { gridColumn: "1", gridRow: "2" },  // Past (left middle)
+        { gridColumn: "2", gridRow: "2" },  // Present (center)
+        { gridColumn: "3", gridRow: "2" },  // Future (right middle)
+        { gridColumn: "2", gridRow: "1" },  // Potential (top center)
+        { gridColumn: "2", gridRow: "3" }   // Core Reason (bottom center)
+      ]
+    }
+  },
+  pentagram: {
+    name: "Pentagram / Elemental",
+    category: "Five Cards",
+    description: "Five elements — Earth, Air, Fire, Water, and Spirit — in balance",
+    cardCount: 5,
+    usesSignificator: false,
+    positions: [
+      { name: "Earth", desc: "Your material world — finances, health, physical environment, stability." },
+      { name: "Air", desc: "Your mental realm — thoughts, communication, plans, intellect." },
+      { name: "Fire", desc: "Your passions — creativity, ambition, will, drive, and energy." },
+      { name: "Water", desc: "Your emotions — relationships, intuition, feelings, inner life." },
+      { name: "Spirit", desc: "The unifying force — your higher self, life purpose, spiritual core." }
+    ],
+    layout: {
+      type: "pentagram",
+      // Positions arranged as a five-pointed star: Spirit top, Fire upper-left, Water upper-right, Earth lower-left, Air lower-right
+      positions: [
+        { top: "72%", left: "8%" },    // Earth (lower-left)
+        { top: "72%", left: "60%" },   // Air (lower-right)
+        { top: "18%", left: "0%" },    // Fire (upper-left)
+        { top: "18%", left: "68%" },   // Water (upper-right)
+        { top: "0%", left: "34%" }     // Spirit (top center)
+      ]
+    }
+  },
+
+  // ── Seven Card Spread ──
+  horseshoe: {
+    name: "Horseshoe",
+    category: "Seven Cards",
+    description: "A comprehensive semi-circle covering past through outcome",
+    cardCount: 7,
+    usesSignificator: false,
+    positions: [
+      { name: "Past Influences", desc: "The distant and recent past that has shaped the current situation." },
+      { name: "Current State", desc: "Where you stand right now — the present moment in full." },
+      { name: "Hidden Factors", desc: "What lies beneath the surface — things you may not yet see." },
+      { name: "Obstacles", desc: "The challenges and blockages standing in your way." },
+      { name: "External Influences", desc: "People, events, or forces outside your control that affect the outcome." },
+      { name: "Advice", desc: "The guidance the cards offer — what you should consider or do." },
+      { name: "Outcome", desc: "The most likely result given the current trajectory and influences." }
+    ],
+    layout: {
+      type: "arc",
+      // 7 cards arranged in a horseshoe/arc
+      positions: [
+        { top: "65%", left: "0%" },
+        { top: "30%", left: "5%" },
+        { top: "5%", left: "18%" },
+        { top: "0%", left: "38%" },
+        { top: "5%", left: "58%" },
+        { top: "30%", left: "70%" },
+        { top: "65%", left: "76%" }
+      ]
+    }
+  },
+
+  // ── Ten Card Spread ──
+  celtic_cross: {
+    name: "Celtic Cross",
+    category: "Ten Cards",
+    description: "The classic 10-card spread for deep, comprehensive readings",
+    cardCount: 10,
+    usesSignificator: true,
+    positions: [
+      { name: "The Present", desc: "This card covers you — it represents your current situation, the energies surrounding you right now." },
+      { name: "The Challenge", desc: "This card crosses you — it reveals the immediate challenge or obstacle you face. It may oppose or complement the first card." },
+      { name: "The Foundation", desc: "This card is beneath you — it shows the foundation, the root cause or subconscious influence that underlies everything." },
+      { name: "The Recent Past", desc: "This card is behind you — it represents the recent past and the energies that are now fading." },
+      { name: "The Crown", desc: "This card crowns you — it shows the best possible outcome, your highest aspirations for this situation." },
+      { name: "The Near Future", desc: "This card is before you — it reveals what is approaching in the near future." },
+      { name: "The Self", desc: "This card represents you — your current attitude, how you see yourself in this situation." },
+      { name: "The Environment", desc: "This card represents your environment — the external influences, the people and energies around you." },
+      { name: "Hopes & Fears", desc: "This card reveals your hopes and fears — the deepest desires and anxieties you hold within." },
+      { name: "The Outcome", desc: "This card is the final outcome — the culmination and resolution of all the forces at play." }
+    ],
+    layout: {
+      type: "celtic_cross",
+      positions: [
+        { gridColumn: "2", gridRow: "2", zIndex: 1 },
+        { gridColumn: "2", gridRow: "2", zIndex: 2, rotate: 90 },
+        { gridColumn: "2", gridRow: "3" },
+        { gridColumn: "1", gridRow: "2" },
+        { gridColumn: "2", gridRow: "1" },
+        { gridColumn: "3", gridRow: "2" },
+        { gridColumn: "5", gridRow: "4" },
+        { gridColumn: "5", gridRow: "3" },
+        { gridColumn: "5", gridRow: "2" },
+        { gridColumn: "5", gridRow: "1" }
+      ],
+      significatorPosition: { gridColumn: "2", gridRow: "2", zIndex: 0 }
+    }
+  }
+};
 
 const ZODIAC_TO_CARD = {
   'Aries': 'Queen of Wands',
@@ -1655,6 +1785,8 @@ function closeTreeModal(e) {
 
 // ─── State ───
 let apiKey = '';
+let selectedSpread = null;
+let querentQuestion = '';
 let significatorCard = null;
 let zodiacSign = '';
 let workingDeck = [];
@@ -1676,7 +1808,8 @@ function saveApiKey() {
   if (apiKey) {
     localStorage.setItem('tarot_api_key', apiKey);
     document.getElementById('apiKeySection').style.display = 'none';
-    showStep('stepBirthdate');
+    showStep('stepSpreadSelect');
+    buildSpreadSelectUI();
   }
 }
 function resetApiKey() {
@@ -1692,7 +1825,8 @@ function resetApiKey() {
   if (saved) {
     apiKey = saved;
     document.getElementById('apiKeySection').style.display = 'none';
-    showStep('stepBirthdate');
+    showStep('stepSpreadSelect');
+    buildSpreadSelectUI();
   }
   const savedBirthdate = localStorage.getItem('tarot_birthdate');
   if (savedBirthdate) {
@@ -1700,6 +1834,49 @@ function resetApiKey() {
     document.getElementById('birthdateClearBtn').style.display = '';
   }
 })();
+
+// ─── Spread Selection ───
+function buildSpreadSelectUI() {
+  const container = document.getElementById('spreadCategories');
+  container.innerHTML = '';
+  const categories = {};
+  for (const [key, spread] of Object.entries(SPREADS)) {
+    if (!categories[spread.category]) categories[spread.category] = [];
+    categories[spread.category].push({ key, ...spread });
+  }
+  for (const [catName, spreads] of Object.entries(categories)) {
+    const catDiv = document.createElement('div');
+    catDiv.className = 'spread-category';
+    catDiv.innerHTML = `<h3>${catName}</h3>`;
+    const optionsDiv = document.createElement('div');
+    optionsDiv.className = 'spread-options';
+    for (const spread of spreads) {
+      const opt = document.createElement('div');
+      opt.className = 'spread-option';
+      opt.onclick = () => selectSpread(spread.key);
+      opt.innerHTML = `<div class="spread-option-name">${spread.name}</div>
+        <div class="spread-option-desc">${spread.description}</div>
+        <div class="spread-option-cards">${spread.cardCount} cards</div>`;
+      optionsDiv.appendChild(opt);
+    }
+    catDiv.appendChild(optionsDiv);
+    container.appendChild(catDiv);
+  }
+}
+
+function selectSpread(key) {
+  selectedSpread = SPREADS[key];
+  if (selectedSpread.usesSignificator) {
+    showStep('stepBirthdate');
+  } else {
+    showStep('stepQuestion');
+  }
+}
+
+function submitQuestion(skip) {
+  querentQuestion = skip ? '' : document.getElementById('questionInput').value.trim();
+  goToShuffle();
+}
 
 // ─── Helpers ───
 function showStep(id) {
@@ -1760,8 +1937,12 @@ function clearBirthdate() {
 
 // ─── Step 2: Shuffle ───
 function goToShuffle() {
-  // Build working deck (exclude significator)
-  workingDeck = DECK.filter(c => c.name !== significatorCard.name);
+  // Build working deck (exclude significator if applicable)
+  if (selectedSpread.usesSignificator && significatorCard) {
+    workingDeck = DECK.filter(c => c.name !== significatorCard.name);
+  } else {
+    workingDeck = [...DECK];
+  }
   workingDeck = fisherYates(workingDeck);
 
   // Build deck stack visual
@@ -1913,22 +2094,234 @@ function selectPile(index, piles) {
 }
 
 // ─── Step 4: Deal ───
+function renderSpreadLayout() {
+  const container = document.getElementById('spreadContainer');
+  container.innerHTML = '';
+  const layout = selectedSpread.layout;
+
+  // Remove any previously injected spread styles
+  const oldStyle = document.getElementById('spread-dynamic-style');
+  if (oldStyle) oldStyle.remove();
+
+  if (layout.type === 'celtic_cross') {
+    // CSS Grid layout for Celtic Cross
+    const grid = document.createElement('div');
+    grid.className = 'spread-grid celtic-cross-layout';
+    grid.style.display = 'grid';
+    grid.style.gridTemplateColumns = '1fr 1fr 1fr 0.3fr 1fr';
+    grid.style.gridTemplateRows = '1fr 1fr 1fr 1fr';
+    grid.style.gap = '12px';
+    grid.style.justifyItems = 'center';
+    grid.style.alignItems = 'center';
+    grid.style.maxWidth = '1100px';
+    grid.style.margin = '0 auto';
+
+    // Significator
+    if (selectedSpread.usesSignificator && significatorCard) {
+      const sigSlot = document.createElement('div');
+      sigSlot.id = 'slot-sig';
+      const sp = layout.significatorPosition;
+      sigSlot.style.gridColumn = sp.gridColumn;
+      sigSlot.style.gridRow = sp.gridRow;
+      sigSlot.style.zIndex = sp.zIndex;
+      grid.appendChild(sigSlot);
+      sigSlot.innerHTML = `<div class="sig-in-grid"><img src="${significatorCard.img}" alt="${significatorCard.name}" /></div>`;
+    }
+
+    // Card slots
+    for (let i = 0; i < selectedSpread.cardCount; i++) {
+      const slot = document.createElement('div');
+      slot.id = `slot-${i}`;
+      const pos = layout.positions[i];
+      slot.style.gridColumn = pos.gridColumn;
+      slot.style.gridRow = pos.gridRow;
+      if (pos.zIndex) slot.style.zIndex = pos.zIndex;
+      if (pos.rotate) slot.classList.add('rotated-slot');
+      grid.appendChild(slot);
+    }
+
+    container.appendChild(grid);
+
+    // Inject responsive styles for Celtic Cross
+    const style = document.createElement('style');
+    style.id = 'spread-dynamic-style';
+    style.textContent = `
+      .celtic-cross-layout { grid-template-columns: 200px 200px 200px 60px 200px; grid-template-rows: 310px 310px 310px 310px; }
+      .rotated-slot .card-slot { transform: rotate(90deg); }
+      .rotated-slot { position: relative; }
+      .rotated-slot .position-overlay {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: rgba(26, 18, 53, 0.85); border: 1px solid rgba(201, 168, 76, 0.5);
+        border-radius: 20px; padding: 4px 14px; color: #8a7d65;
+        font-family: 'Cinzel', serif; text-transform: uppercase; letter-spacing: 1px;
+        font-size: 0.75em; white-space: nowrap; z-index: 5; pointer-events: none;
+      }
+      .rotated-slot:has(.flipped) .position-overlay { display: none; }
+      @media (max-width: 1024px) {
+        .celtic-cross-layout { grid-template-columns: 150px 150px 150px 30px 150px; grid-template-rows: 260px 260px 260px 260px; gap: 8px; }
+        .celtic-cross-layout .card-slot, .celtic-cross-layout .sig-in-grid { width: 130px; height: 202px; }
+      }
+      @media (max-width: 768px) {
+        .celtic-cross-layout { grid-template-columns: 110px 110px 110px 20px 110px; grid-template-rows: 210px 210px 210px 210px; gap: 6px; }
+        .celtic-cross-layout .card-slot, .celtic-cross-layout .sig-in-grid { width: 100px; height: 155px; }
+      }
+      @media (max-width: 580px) {
+        .celtic-cross-layout { grid-template-columns: 80px 80px 80px 15px 80px; grid-template-rows: 170px 170px 170px 170px; gap: 4px; }
+        .celtic-cross-layout .card-slot, .celtic-cross-layout .sig-in-grid { width: 72px; height: 112px; }
+      }
+    `;
+    document.head.appendChild(style);
+
+  } else if (layout.type === 'grid') {
+    // Generic grid layout (five-card cross)
+    const grid = document.createElement('div');
+    grid.className = 'spread-grid generic-grid-layout';
+    grid.style.display = 'grid';
+    grid.style.gridTemplateColumns = layout.gridTemplateColumns;
+    grid.style.gridTemplateRows = layout.gridTemplateRows;
+    grid.style.gap = '12px';
+    grid.style.justifyItems = 'center';
+    grid.style.alignItems = 'center';
+    grid.style.maxWidth = '700px';
+    grid.style.margin = '0 auto';
+
+    for (let i = 0; i < selectedSpread.cardCount; i++) {
+      const slot = document.createElement('div');
+      slot.id = `slot-${i}`;
+      const pos = layout.positions[i];
+      slot.style.gridColumn = pos.gridColumn;
+      slot.style.gridRow = pos.gridRow;
+      grid.appendChild(slot);
+    }
+    container.appendChild(grid);
+
+    // Responsive styles
+    const style = document.createElement('style');
+    style.id = 'spread-dynamic-style';
+    style.textContent = `
+      .generic-grid-layout { grid-template-columns: 200px 200px 200px; grid-template-rows: 310px 310px 310px; }
+      @media (max-width: 768px) {
+        .generic-grid-layout { grid-template-columns: 130px 130px 130px; grid-template-rows: 230px 230px 230px; gap: 8px; }
+        .generic-grid-layout .card-slot { width: 120px; height: 186px; }
+      }
+      @media (max-width: 580px) {
+        .generic-grid-layout { grid-template-columns: 90px 90px 90px; grid-template-rows: 170px 170px 170px; gap: 6px; }
+        .generic-grid-layout .card-slot { width: 80px; height: 124px; }
+      }
+    `;
+    document.head.appendChild(style);
+
+  } else if (layout.type === 'row') {
+    // Simple flexbox row (three-card spreads)
+    const row = document.createElement('div');
+    row.className = 'spread-row';
+    row.style.display = 'flex';
+    row.style.justifyContent = 'center';
+    row.style.gap = '30px';
+    row.style.flexWrap = 'wrap';
+    row.style.maxWidth = '700px';
+    row.style.margin = '0 auto';
+
+    for (let i = 0; i < selectedSpread.cardCount; i++) {
+      const slot = document.createElement('div');
+      slot.id = `slot-${i}`;
+      row.appendChild(slot);
+    }
+    container.appendChild(row);
+
+  } else if (layout.type === 'arc') {
+    // Horseshoe arc layout
+    const arc = document.createElement('div');
+    arc.className = 'spread-arc';
+    arc.style.position = 'relative';
+    arc.style.width = '100%';
+    arc.style.maxWidth = '750px';
+    arc.style.margin = '0 auto';
+    arc.style.aspectRatio = '750 / 480';
+
+    for (let i = 0; i < selectedSpread.cardCount; i++) {
+      const slot = document.createElement('div');
+      slot.id = `slot-${i}`;
+      slot.style.position = 'absolute';
+      slot.style.top = layout.positions[i].top;
+      slot.style.left = layout.positions[i].left;
+      arc.appendChild(slot);
+    }
+    container.appendChild(arc);
+
+    // On narrow screens, switch to flow layout
+    const style = document.createElement('style');
+    style.id = 'spread-dynamic-style';
+    style.textContent = `
+      @media (max-width: 580px) {
+        .spread-arc {
+          position: static !important; display: flex !important; flex-wrap: wrap !important;
+          justify-content: center !important; gap: 15px !important; aspect-ratio: auto !important;
+        }
+        .spread-arc > div { position: static !important; }
+        .spread-arc .card-slot { width: 80px; height: 124px; }
+      }
+      @media (max-width: 768px) and (min-width: 581px) {
+        .spread-arc .card-slot { width: 100px; height: 155px; }
+      }
+    `;
+    document.head.appendChild(style);
+
+  } else if (layout.type === 'pentagram') {
+    // Star/pentagram layout
+    const star = document.createElement('div');
+    star.className = 'spread-pentagram';
+    star.style.position = 'relative';
+    star.style.width = '100%';
+    star.style.maxWidth = '600px';
+    star.style.margin = '0 auto';
+    star.style.aspectRatio = '600 / 550';
+
+    for (let i = 0; i < selectedSpread.cardCount; i++) {
+      const slot = document.createElement('div');
+      slot.id = `slot-${i}`;
+      slot.style.position = 'absolute';
+      slot.style.top = layout.positions[i].top;
+      slot.style.left = layout.positions[i].left;
+      star.appendChild(slot);
+    }
+    container.appendChild(star);
+
+    // On narrow screens, switch to flow layout
+    const style = document.createElement('style');
+    style.id = 'spread-dynamic-style';
+    style.textContent = `
+      @media (max-width: 580px) {
+        .spread-pentagram {
+          position: static !important; display: flex !important; flex-wrap: wrap !important;
+          justify-content: center !important; gap: 15px !important; aspect-ratio: auto !important;
+        }
+        .spread-pentagram > div { position: static !important; }
+        .spread-pentagram .card-slot { width: 80px; height: 124px; }
+      }
+      @media (max-width: 768px) and (min-width: 581px) {
+        .spread-pentagram .card-slot { width: 100px; height: 155px; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
 function goToDeal() {
   currentDealIndex = 0;
   cardInterpretations = [];
-  drawnCards = workingDeck.slice(0, 10).map(card => ({
+  drawnCards = workingDeck.slice(0, selectedSpread.cardCount).map(card => ({
     ...card,
     reversed: Math.random() < 0.35
   }));
 
   showStep('stepDeal');
 
-  // Place significator in grid
-  const sigSlot = document.getElementById('slot-sig');
-  sigSlot.innerHTML = `<div class="sig-in-grid"><img src="${significatorCard.img}" alt="${significatorCard.name}" /></div>`;
+  // Build the spread layout dynamically
+  renderSpreadLayout();
 
   // Create all cards face-down
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < selectedSpread.cardCount; i++) {
     createCardHTML(drawnCards[i], i);
   }
 
@@ -2004,7 +2397,7 @@ function createCardHTML(card, index) {
   labels.className = 'card-labels';
   const posLabel = document.createElement('div');
   posLabel.className = 'position-label';
-  posLabel.textContent = POSITIONS[index];
+  posLabel.textContent = selectedSpread.positions[index].name;
   const nameLabel = document.createElement('div');
   nameLabel.className = 'card-name-label';
   nameLabel.textContent = card.name;
@@ -2012,11 +2405,13 @@ function createCardHTML(card, index) {
   labels.appendChild(nameLabel);
 
   cardSlot.appendChild(inner);
-  if (index === 1) {  // Card 2 (crossing) - pill overlay instead of labels
+  const layoutPos = selectedSpread.layout.positions && selectedSpread.layout.positions[index];
+  if (layoutPos && layoutPos.rotate) {
+    // Rotated card (e.g. crossing card) - pill overlay instead of labels
     slot.appendChild(cardSlot);
     const overlay = document.createElement('div');
     overlay.className = 'position-overlay';
-    overlay.textContent = POSITIONS[index];
+    overlay.textContent = selectedSpread.positions[index].name;
     slot.appendChild(overlay);
   } else {
     cardSlot.appendChild(labels);
@@ -2025,8 +2420,8 @@ function createCardHTML(card, index) {
 }
 
 function updateStickyBar(index) {
-  document.getElementById('stickyPosInfo').textContent = `Position ${index + 1}: ${POSITIONS[index]}`;
-  document.getElementById('stickyPosDesc').textContent = POSITION_DESC[index];
+  document.getElementById('stickyPosInfo').textContent = `Position ${index + 1}: ${selectedSpread.positions[index].name}`;
+  document.getElementById('stickyPosDesc').textContent = selectedSpread.positions[index].desc;
   const btn = document.getElementById('stickyBtn');
   btn.textContent = 'Reveal Next Card';
   btn.disabled = false;
@@ -2034,7 +2429,7 @@ function updateStickyBar(index) {
 }
 
 function dealNextCard() {
-  if (currentDealIndex >= 10) return;
+  if (currentDealIndex >= selectedSpread.cardCount) return;
 
   const btn = document.getElementById('stickyBtn');
   btn.disabled = true;
@@ -2065,7 +2460,7 @@ function showModal(index) {
   document.getElementById('modalImg').src = card.img;
   document.getElementById('modalImg').className = card.reversed ? 'reversed' : '';
   document.getElementById('modalName').textContent = card.name;
-  document.getElementById('modalPosition').textContent = `${POSITIONS[index]} — ${POSITION_DESC[index]}`;
+  document.getElementById('modalPosition').textContent = `${selectedSpread.positions[index].name} — ${selectedSpread.positions[index].desc}`;
   const orientEl = document.getElementById('modalOrientation');
   orientEl.textContent = card.reversed ? 'Reversed' : 'Upright';
   orientEl.className = 'orientation ' + (card.reversed ? 'reversed-tag' : 'upright');
@@ -2106,9 +2501,9 @@ function showCardReading(index) {
   const orientClass = card.reversed ? 'reversed' : 'upright';
 
   const header = document.getElementById('readingPanelHeader');
-  header.innerHTML = `<h3>${POSITIONS[index]} \u2014 ${card.name}</h3>
+  header.innerHTML = `<h3>${selectedSpread.positions[index].name} \u2014 ${card.name}</h3>
     <span class="card-orientation ${orientClass}">${orientation}</span>
-    <div class="pos-desc">${POSITION_DESC[index]}</div>`;
+    <div class="pos-desc">${selectedSpread.positions[index].desc}</div>`;
 
   // Kabbalistic correspondences
   const correspEl = document.getElementById('readingPanelCorrespondences');
@@ -2171,7 +2566,7 @@ function showSynthesisReading() {
   activeReadingIndex = -2;
   const header = document.getElementById('readingPanelHeader');
   header.innerHTML = `<h3>Synthesis</h3>
-    <div class="pos-desc">The threads of all ten cards woven together</div>`;
+    <div class="pos-desc">The threads of all ${selectedSpread.cardCount} cards woven together</div>`;
   document.getElementById('readingPanelCorrespondences').innerHTML = '';
   document.getElementById('treeContainer').style.display = 'none';
   clearTreeHighlight();
@@ -2190,7 +2585,7 @@ function showSynthesisReading() {
 function buildReadingNav() {
   const nav = document.getElementById('readingPanelNav');
   nav.innerHTML = '';
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < selectedSpread.cardCount; i++) {
     const dot = document.createElement('button');
     dot.className = 'nav-dot';
     dot.textContent = i + 1;
@@ -2225,12 +2620,19 @@ function toggleReadingDrawer() {
 
 // ─── Interpretation ───
 function buildCardContext(upToIndex) {
-  let text = `Querent's zodiac sign: ${zodiacSign}\n`;
-  text += `Significator card: ${significatorCard.name}\n\n`;
+  let text = `Spread: ${selectedSpread.name}\n`;
+  if (selectedSpread.usesSignificator && significatorCard) {
+    text += `Querent's zodiac sign: ${zodiacSign}\n`;
+    text += `Significator card: ${significatorCard.name}\n`;
+  }
+  if (querentQuestion) {
+    text += `Querent's question: ${querentQuestion}\n`;
+  }
+  text += '\n';
   for (let i = 0; i <= upToIndex; i++) {
     const card = drawnCards[i];
     const orientation = card.reversed ? 'Reversed' : 'Upright';
-    text += `Position ${i + 1} — ${POSITIONS[i]}:\n`;
+    text += `Position ${i + 1} — ${selectedSpread.positions[i].name}:\n`;
     text += `  Card: ${card.name} (${orientation})\n`;
     text += `  Keywords: ${card.reversed ? card.reversedMeaning : card.uprightMeaning}\n`;
     const c = getCardCorrespondences(card.name);
@@ -2365,12 +2767,20 @@ async function interpretCard(index) {
     }
   }
 
-  const systemPrompt = `You are a wise tarot reader interpreting a single card in a Celtic Cross reading. The querent's zodiac sign is ${zodiacSign} and their significator is ${significatorCard.name}.
+  let querentContext = '';
+  if (selectedSpread.usesSignificator && significatorCard) {
+    querentContext = `The querent's zodiac sign is ${zodiacSign} and their significator is ${significatorCard.name}.`;
+  }
+  if (querentQuestion) {
+    querentContext += `${querentContext ? ' ' : ''}The querent's question is: "${querentQuestion}"`;
+  }
+
+  const systemPrompt = `You are a wise tarot reader interpreting a single card in a ${selectedSpread.name} reading.${querentContext ? ' ' + querentContext : ''}
 
 Interpret this newly revealed card in 2-3 concise paragraphs. Consider its position meaning, its Kabbalistic correspondences on the Tree of Life, and how it relates to any previously revealed cards. Use evocative but grounded language. Address the querent as "you." Do not use markdown headers — just flowing prose.`;
 
   const context = buildCardContext(index);
-  const userMessage = `Here is the reading so far:\n\n${context}\nThe card just revealed is Position ${index + 1} (${POSITIONS[index]}): ${card.name} (${orientation}).${kabbalahContext} Please interpret this card.`;
+  const userMessage = `Here is the reading so far:\n\n${context}\nThe card just revealed is Position ${index + 1} (${selectedSpread.positions[index].name}): ${card.name} (${orientation}).${kabbalahContext} Please interpret this card.`;
 
   const contentEl = document.getElementById('readingPanelContent');
   isStreaming = true;
@@ -2382,7 +2792,7 @@ Interpret this newly revealed card in 2-3 concise paragraphs. Consider its posit
 
   // After streaming completes, update the sticky bar
   const btn = document.getElementById('stickyBtn');
-  if (currentDealIndex < 10) {
+  if (currentDealIndex < selectedSpread.cardCount) {
     updateStickyBar(currentDealIndex);
   } else {
     // All cards dealt — offer synthesis
@@ -2405,7 +2815,7 @@ async function getSynthesis() {
   activeReadingIndex = -2;
   const header = document.getElementById('readingPanelHeader');
   header.innerHTML = `<h3>Synthesis</h3>
-    <div class="pos-desc">The threads of all ten cards woven together</div>`;
+    <div class="pos-desc">The threads of all ${selectedSpread.cardCount} cards woven together</div>`;
   document.getElementById('readingPanelCorrespondences').innerHTML = '';
   document.getElementById('treeContainer').style.display = 'none';
   clearTreeHighlight();
@@ -2417,12 +2827,20 @@ async function getSynthesis() {
 
   const contentEl = document.getElementById('readingPanelContent');
 
-  const systemPrompt = `You are a wise tarot reader providing the final synthesis of a Celtic Cross reading. The querent's zodiac sign is ${zodiacSign} and their significator is ${significatorCard.name}.
+  let synthQuerentContext = '';
+  if (selectedSpread.usesSignificator && significatorCard) {
+    synthQuerentContext = `The querent's zodiac sign is ${zodiacSign} and their significator is ${significatorCard.name}.`;
+  }
+  if (querentQuestion) {
+    synthQuerentContext += `${synthQuerentContext ? ' ' : ''}The querent's question is: "${querentQuestion}"`;
+  }
 
-Weave all 10 cards together into a cohesive narrative. Draw connections between positions, their Kabbalistic correspondences on the Tree of Life, and identify overarching themes. Note patterns in the sephiroth and elements that appear. Offer guidance. Be poetic but insightful. Address the querent as "you." Use flowing prose with paragraph breaks. Do not use markdown headers.`;
+  const systemPrompt = `You are a wise tarot reader providing the final synthesis of a ${selectedSpread.name} reading.${synthQuerentContext ? ' ' + synthQuerentContext : ''}
 
-  const fullContext = buildCardContext(9);
-  const userMessage = `Here is the complete Celtic Cross reading with all individual interpretations:\n\n${fullContext}\nPlease provide a final synthesis that weaves all the cards together into a coherent narrative.`;
+Weave all ${selectedSpread.cardCount} cards together into a cohesive narrative. Draw connections between positions, their Kabbalistic correspondences on the Tree of Life, and identify overarching themes. Note patterns in the sephiroth and elements that appear. Offer guidance. Be poetic but insightful. Address the querent as "you." Use flowing prose with paragraph breaks. Do not use markdown headers.`;
+
+  const fullContext = buildCardContext(selectedSpread.cardCount - 1);
+  const userMessage = `Here is the complete ${selectedSpread.name} reading with all individual interpretations:\n\n${fullContext}\nPlease provide a final synthesis that weaves all the cards together into a coherent narrative.`;
 
   isStreaming = true;
   document.getElementById('readingPanel').classList.add('streaming');
@@ -2450,6 +2868,8 @@ function formatMarkdown(text) {
 
 function startOver() {
   if (abortController) { abortController.abort(); abortController = null; }
+  selectedSpread = null;
+  querentQuestion = '';
   significatorCard = null;
   zodiacSign = '';
   workingDeck = [];
@@ -2457,22 +2877,26 @@ function startOver() {
   cardInterpretations = [];
   currentDealIndex = 0;
   cutRound = 0;
-  for (let i = 0; i < 10; i++) {
-    const slot = document.getElementById(`slot-${i}`);
-    if (slot) slot.innerHTML = '';
-  }
-  const sigSlot = document.getElementById('slot-sig');
-  if (sigSlot) sigSlot.innerHTML = '';
+  // Clear dynamic spread layout
+  const spreadContainer = document.getElementById('spreadContainer');
+  if (spreadContainer) spreadContainer.innerHTML = '';
+  const oldStyle = document.getElementById('spread-dynamic-style');
+  if (oldStyle) oldStyle.remove();
+  // Reset question input
+  const questionInput = document.getElementById('questionInput');
+  if (questionInput) questionInput.value = '';
   activeReadingIndex = -1;
   isStreaming = false;
   synthesisText = '';
   document.getElementById('readingPanel').classList.remove('visible', 'expanded');
   document.getElementById('readingPanelContent').innerHTML = '';
   document.getElementById('readingPanelHeader').innerHTML = '';
+  document.getElementById('readingPanelCorrespondences').innerHTML = '';
   document.getElementById('stickyBar').classList.remove('visible');
   document.body.classList.remove('has-sticky-bar');
   if (apiKey) {
-    showStep('stepBirthdate');
+    showStep('stepSpreadSelect');
+    buildSpreadSelectUI();
   } else {
     hideAllSteps();
   }
