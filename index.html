@@ -78,6 +78,9 @@
     border-radius: 6px; color: #c9a84c; cursor: pointer;
     font-family: 'Cinzel', serif; font-size: 0.8em; white-space: nowrap;
   }
+  .api-key-hint { font-size: 0.8em; margin-top: 6px; color: #8a7d65; }
+  .api-key-hint a { color: #c9a84c; text-decoration: none; }
+  .api-key-hint a:hover { text-decoration: underline; }
   .api-key-status { font-size: 0.8em; margin-top: 4px; height: 1.2em; }
   .api-key-status.saved { color: #6a9955; }
 
@@ -687,6 +690,7 @@
       <input type="password" id="apiKeyInput" placeholder="sk-ant-..." />
       <button onclick="saveApiKey()">Save</button>
     </div>
+    <div class="api-key-hint">Get your key at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">console.anthropic.com</a></div>
     <div class="api-key-status" id="apiKeyStatus"></div>
   </div>
 
