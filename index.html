@@ -2231,10 +2231,10 @@ function renderSpreadLayout() {
     const grid = document.createElement('div');
     grid.className = 'spread-horseshoe';
     grid.style.display = 'grid';
-    grid.style.gridTemplateColumns = 'repeat(7, 1fr)';
+    grid.style.gridTemplateColumns = 'repeat(7, minmax(0, 1fr))';
     grid.style.gap = '4px';
     grid.style.justifyItems = 'center';
-    grid.style.maxWidth = '1100px';
+    grid.style.maxWidth = '100%';
     grid.style.margin = '0 auto';
 
     for (let i = 0; i < selectedSpread.cardCount; i++) {
@@ -2701,6 +2701,19 @@ async function streamToElement(el, systemPrompt, userMessage, maxTokens, appendM
     streamDiv.className = 'card-reading-stream';
     el.appendChild(streamDiv);
 
+    // Mobile auto-scroll: scroll reading panel as content streams in
+    const isMobile = window.innerWidth <= 768;
+    let userHasScrolled = false;
+    const scrollPanel = document.getElementById('readingPanel');
+    const onScroll = () => {
+      if (scrollPanel.scrollTop + scrollPanel.clientHeight < scrollPanel.scrollHeight - 30) {
+        userHasScrolled = true;
+      }
+    };
+    if (isMobile && scrollPanel) {
+      scrollPanel.addEventListener('scroll', onScroll);
+    }
+
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
@@ -2720,6 +2733,9 @@ async function streamToElement(el, systemPrompt, userMessage, maxTokens, appendM
             if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
               fullText += parsed.delta.text;
               streamDiv.innerHTML = formatMarkdown(fullText) + '<span class="cursor"></span>';
+              if (isMobile && !userHasScrolled && scrollPanel) {
+                scrollPanel.scrollTop = scrollPanel.scrollHeight;
+              }
             }
           } catch (e) {}
         }
@@ -2727,6 +2743,12 @@ async function streamToElement(el, systemPrompt, userMessage, maxTokens, appendM
     }
     // Final render without cursor
     streamDiv.innerHTML = formatMarkdown(fullText);
+    if (isMobile && !userHasScrolled && scrollPanel) {
+      scrollPanel.scrollTop = scrollPanel.scrollHeight;
+    }
+    if (isMobile && scrollPanel) {
+      scrollPanel.removeEventListener('scroll', onScroll);
+    }
     return fullText;
 
   } catch (err) {
